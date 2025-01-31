@@ -117,14 +117,8 @@ def main():
             1. Analyze the customer's message and understand customer intent
             2. extract the key information from the message including message date
             3. Once you understand user intent, you must generate step by step plan to respond to user request. This plan should include the tools we should use to help us respond to user request
-            4. From the plan call the tools that mention in the plan
-            5. Collect all tools response into context and generate final response to the user
-            6. All items in company refund policy are true and must be followed
-            6. Provide reasoning for the final response
             
             Always be thorough but concise in your analysis.
-            
-            
             """
 
             
@@ -149,6 +143,8 @@ def main():
         print(f"❌ Error calling OpenAI: {e}")
         return
 
+    print("\n=== Analysis Messages ===")
+    print(f"messages: {completion.choices[0].message}")
     # Process tool calls if any
     if completion.choices[0].message.tool_calls:
         print("\n=== 4. Processing Tool Calls ===")
@@ -175,8 +171,21 @@ def main():
                 "tool_call_id": tool_call.id,
                 "content": json.dumps(result)
             })
-        print("\n=== Messages ===")
-        print(f"messages: {messages}")
+        user_message = {
+            "role": "user",
+            "content": """Flollow the plan you generated and generate a final response to the user based on the tools response:
+            1. All items in company refund policy are true and must be followed
+            2. Provide reasoning for the final response
+            follow this format:
+            === 
+            Final Response:
+            ===
+            Reasoning:
+            ===
+            """
+        }
+        messages.append(user_message)
+       
         print("\n=== 5. Getting Final Decision ===")
         try:
             final_completion = client.chat.completions.create(
