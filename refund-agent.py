@@ -6,6 +6,11 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import os
 
+# Import tools
+from tools.refund_policy import get_refund_policy
+from tools.transaction_details import get_transaction_details
+from tools.tool_schemas import tools
+
 # Load environment variables
 load_dotenv()
 client = OpenAI()
@@ -33,69 +38,6 @@ class RefundRequest(BaseModel):
     meets_policy: Optional[bool] = None
     recommended_action: Optional[str] = None
     message_date: datetime
-
-# Tool functions
-def get_refund_policy():
-    """Get company refund policy"""
-    try:
-        with open("data/refund-policy.md", "r") as f:
-            policy = f.read()
-        return {"policy": policy}
-    except Exception as e:
-        print(f"Error reading refund policy: {e}")
-        return {"policy": "Error reading policy"}
-
-def get_transaction_details(customer_id: str, order_id: str):
-    """Get transaction details for a specific order"""
-    try:
-        with open("data/transaction_detail.json", "r") as f:
-            transactions = json.load(f)
-            
-        # Find matching transaction
-        for transaction in transactions["transactions"]:
-            if transaction["order_id"] == order_id:
-                return transaction
-        return None
-    except Exception as e:
-        print(f"Error reading transaction details: {e}")
-        return None
-
-# Define function schemas for OpenAI
-tools = [
-    {
-        "type": "function",
-        "function": {
-            "name": "get_refund_policy",
-            "description": "Get the company's refund policy",
-            "parameters": {
-                "type": "object",
-                "properties": {},
-                "required": []
-            }
-        }
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "get_transaction_details",
-            "description": "Get details about a specific transaction",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "customer_id": {
-                        "type": "string",
-                        "description": "Customer ID"
-                    },
-                    "order_id": {
-                        "type": "string",
-                        "description": "Order ID"
-                    }
-                },
-                "required": ["customer_id", "order_id"]
-            }
-        }
-    }
-]
 
 def main():
     print("\n=== 1. Loading Customer Message ===")
