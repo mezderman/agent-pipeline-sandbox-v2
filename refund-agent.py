@@ -117,8 +117,18 @@ def main():
             1. Analyze the customer's message and understand customer intent
             2. extract the key information from the message including message date
             3. Once you understand user intent, you must generate step by step plan to respond to user request. This plan should include the tools we should use to help us respond to user request
-            
+            4. After following the plan, analyze information in your context and make decision about refund
+            6. All items in company refund policy are true and must be followed
+            7. Provide your decision refund_approved or refund_denied and reasoning
+            Final Decision:
+            ===
+            Decision:
+            ===
+            Reasoning:
+            ===
             Always be thorough but concise in your analysis.
+            
+            
             """
 
             
@@ -132,7 +142,7 @@ def main():
     print("\n=== 3. Calling OpenAI for Initial Analysis ===")
     try:
         completion = client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-3.5-turbo",
             messages=messages,
             tools=tools,
             tool_choice="auto",
@@ -171,21 +181,7 @@ def main():
                 "tool_call_id": tool_call.id,
                 "content": json.dumps(result)
             })
-        user_message = {
-            "role": "user",
-            "content": """Flollow the plan you generated and generate a final response to the user based on the tools response:
-            1. All items in company refund policy are true and must be followed
-            2. Provide reasoning for the final response
-            follow this format:
-            === 
-            Final Response:
-            ===
-            Reasoning:
-            ===
-            """
-        }
-        messages.append(user_message)
-       
+        
         print("\n=== 5. Getting Final Decision ===")
         try:
             final_completion = client.chat.completions.create(
