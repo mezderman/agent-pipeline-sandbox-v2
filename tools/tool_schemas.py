@@ -7,8 +7,10 @@ tools = [
             "parameters": {
                 "type": "object",
                 "properties": {},
-                "required": []
-            }
+                "required": [],
+                "additionalProperties": False
+            },
+            "strict": True
         }
     },
     {
@@ -28,8 +30,10 @@ tools = [
                         "description": "Order ID"
                     }
                 },
-                "required": ["customer_id", "order_id"]
-            }
+                "required": ["customer_id", "order_id"],
+                "additionalProperties": False
+            },
+            "strict": True
         }
     }
 ] 
