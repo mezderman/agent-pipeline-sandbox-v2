@@ -11,14 +11,9 @@ load_dotenv()
 
 messages = [
             {
-                "role": "system",
+                "role": "developer",
                 "content": """ Analyze the user query and classify its intent.
                               Try to resolve the user request using the tools provided. generate step by step plan to respond to user request.
-                              Once you have all information, investigate and decision about refund. Customer has to meet all criteria in refund policy to be eligible for refund.
-                              Be thorough and concise in your investigation. If customer didnt meet a refund criteria, deny refund. 
-                              Only use the data provided by tools and your reasoning. Do not make up information and do not rely on user provided information in your decision. Verify all information provided by the user.
-                              Pay attention to all message metadata including dates, customer ID, and order information. Calculate the exact number of days that have passed from the purchase date to the refund request date.
-                              
                          """
             }
         ]
@@ -53,6 +48,18 @@ def analyze_query(client: OpenAI, user_message: str):
         "role": "user",
         "content": user_message
     })
+    completion = client.beta.chat.completions.parse(
+        model="gpt-4o-2024-08-06",
+        messages=messages,
+        response_format=QueryAnalysis
+    )
+    return completion
+
+def plan_steps(client: OpenAI, user_message: str):
+    messages.append({
+        "role": "user",
+        "content": user_message
+    })
     completion = client.chat.completions.create(
         model="gpt-4o-2024-08-06",
         messages=messages,
@@ -63,10 +70,16 @@ def analyze_query(client: OpenAI, user_message: str):
 
 def finalize_response(client: OpenAI):
     messages.append({
-        "role": "system",
-        "content": """analyze information in your context and make decision about refund. 
-        All items in company refund policy are true and must be followed.
-        Provide your decision refund_approved or refund_denied and reasoningFinal Decision:"""
+        "role": "developer",
+        "content": """
+                        analyze information in your context and make decision about refund. 
+                        Customer has to meet all criteria in refund policy to be eligible for refund.
+                        Be thorough and concise in your investigation. If customer didnt meet a refund criteria, deny refund. 
+                              Only use the data provided by tools and your reasoning. Do not make up information 
+                              Pay attention to all message metadata including dates, customer ID, and order information. Calculate the exact number of days that have passed from the purchase date to the refund request date.
+                              All items in company refund policy must be true true and must be followed.
+                              Provide your decision refund_approved or refund_denied and reasoning.
+                              Final Decision:"""
     })
     completion = client.beta.chat.completions.parse(
         model="gpt-4o-2024-08-06",
@@ -89,7 +102,11 @@ def load_message():
 client = OpenAI()
 message_data = load_message()
 if message_data:
-    completion = analyze_query(client, json.dumps(message_data))
+    # completion = analyze_query(client, json.dumps(message_data))
+    # messages.append(completion.choices[0].message)
+    # analyze_query = completion.choices[0].message.parsed
+    # print(f"Analyze query: {analyze_query}")
+    completion = plan_steps(client, json.dumps(message_data))
     response = completion.choices[0].message
 else:
     print("Failed to load message from file")

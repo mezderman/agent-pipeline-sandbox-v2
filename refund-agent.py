@@ -10,6 +10,7 @@ import os
 from tools.refund_policy import get_refund_policy
 from tools.transaction_details import get_transaction_details
 from tools.tool_schemas import tools
+from core.memory import Memory
 
 # Load environment variables
 load_dotenv()
@@ -39,6 +40,23 @@ class RefundRequest(BaseModel):
     recommended_action: Optional[str] = None
     message_date: datetime
 
+SYSTEM_PROMPT = """You are a customer service AI assistant handling refund requests. 
+Follow these steps:
+1. Analyze the customer's message and understand customer intent
+2. extract the key information from the message including message date
+3. Once you understand user intent, you must generate step by step plan to respond to user request. This plan should include the tools we should use to help us respond to user request
+4. After following the plan, analyze information in your context and make decision about refund
+6. All items in company refund policy are true and must be followed
+7. Provide your decision refund_approved or refund_denied and reasoning
+Final Decision:
+===
+Decision:
+===
+Reasoning:
+===
+Always be thorough but concise in your analysis.
+"""
+
 def main():
     print("\n=== 1. Loading Customer Message ===")
     try:
@@ -50,42 +68,18 @@ def main():
         return
 
     print("\n=== 2. Preparing Initial Analysis ===")
-    # System message with custom instructions
-    messages = [
-        {
-            "role": "system",
-            "content": """You are a customer service AI assistant handling refund requests. 
-            Follow these steps:
-            1. Analyze the customer's message and understand customer intent
-            2. extract the key information from the message including message date
-            3. Once you understand user intent, you must generate step by step plan to respond to user request. This plan should include the tools we should use to help us respond to user request
-            4. After following the plan, analyze information in your context and make decision about refund
-            6. All items in company refund policy are true and must be followed
-            7. Provide your decision refund_approved or refund_denied and reasoning
-            Final Decision:
-            ===
-            Decision:
-            ===
-            Reasoning:
-            ===
-            Always be thorough but concise in your analysis.
-            
-            
-            """
-
-            
-        },
-        {
-            "role": "user",
-            "content": f"Please analyze this customer message:\n\nFrom: {ticket['from']}\nCustomer ID: {ticket['customer_id']}\nmessage_date: {ticket['message_date']}\nSubject: {ticket['subject']}\nBody:\n{ticket['body']}"
-        }
-    ]
+    # Initialize memory with system prompt
+    memory = Memory(SYSTEM_PROMPT)
+    
+    # Add user message
+    user_message = f"Please analyze this customer message:\n\nFrom: {ticket['from']}\nCustomer ID: {ticket['customer_id']}\nmessage_date: {ticket['message_date']}\nSubject: {ticket['subject']}\nBody:\n{ticket['body']}"
+    memory.add_user_message(user_message)
 
     print("\n=== 3. Calling OpenAI for Initial Analysis ===")
     try:
         completion = client.chat.completions.create(
             model="gpt-3.5-turbo",
-            messages=messages,
+            messages=memory.get_messages(),
             tools=tools,
             tool_choice="auto",
             temperature=0
@@ -97,10 +91,11 @@ def main():
 
     print("\n=== Analysis Messages ===")
     print(f"messages: {completion.choices[0].message}")
+    
     # Process tool calls if any
     if completion.choices[0].message.tool_calls:
         print("\n=== 4. Processing Tool Calls ===")
-        messages.append(completion.choices[0].message)  # Add assistant's message
+        memory.add_assistant_message(completion.choices[0].message)
 
         for tool_call in completion.choices[0].message.tool_calls:
             name = tool_call.function.name
@@ -117,18 +112,14 @@ def main():
             
             print(f"   Result received: {result is not None}")
 
-            # Add the result to messages
-            messages.append({
-                "role": "tool",
-                "tool_call_id": tool_call.id,
-                "content": json.dumps(result)
-            })
+            # Add the tool result to memory
+            memory.add_tool_result(tool_call.id, result)
         
         print("\n=== 5. Getting Final Decision ===")
         try:
             final_completion = client.chat.completions.create(
                 model="gpt-4o",
-                messages=messages,
+                messages=memory.get_messages(),
                 temperature=0
             )
             print("✅ Received final decision")
