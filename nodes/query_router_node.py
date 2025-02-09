@@ -39,29 +39,29 @@ class QueryRouterNode(Node):
                         "role": "user",
                         "content": json.dumps(data)
                     })
-        completion = self.completion(self.client)
-        analyzed_query = completion.choices[0].message.parsed
+        
+        analyzed_query = self.completion(self.client)
+       
+        self.save_output_data(analyzed_query)
+        pipeline_result = self.run_next_pipeline(analyzed_query)
+
+        return pipeline_result
+
+    def run_next_pipeline(self):
+        pipeline_manager = PipelineManager.get_instance()
+        pipeline_name = INTENT_TO_PIPELINE_MAP[self.get_output_data().intent]
+        pipeline_result = pipeline_manager.run_pipeline(pipeline_name, self.get_output_data())
+        return pipeline_result
+
+    def save_output_data(self, analyzed_query):
         msg={
-            "role": "assistant",
-            "content": f"""
-                Intent: {analyzed_query.intent}
-            """
-        }
+                "role": "assistant",
+                "content": f"""
+                    Intent: {analyzed_query.intent}
+                """
+            }
         self.memory.add_message(msg)
         self.set_output_data(analyzed_query)
-        
-        pipeline_manager = PipelineManager.get_instance()
-        pipeline_name = INTENT_TO_PIPELINE_MAP[analyzed_query.intent]
-        pipeline_result = pipeline_manager.run_pipeline(pipeline_name, data)
-        # if analyzed_query.intent == "refund_request":
-        #     print("starting refund pipeline")
-        #     pipeline_result = pipeline_manager.run_pipeline("refund-pipeline", data)
-        # else:
-        #     print("starting other pipeline")
-        #     pipeline_result = pipeline_manager.run_pipeline("other-pipeline", data)
-            
-        
-        return pipeline_result
 
     def completion(self, client: OpenAI):
         completion = client.beta.chat.completions.parse(
@@ -69,7 +69,8 @@ class QueryRouterNode(Node):
             messages=self.memory.get_messages(),
             response_format=QueryAnalysis
         )
-        return completion
+        analyzed_query = completion.choices[0].message.parsed
+        return analyzed_query
 
 
    
