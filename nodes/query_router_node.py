@@ -5,11 +5,11 @@ from core.node import Node
 from openai import OpenAI
 from core.memory import Memory
 from core.pipeline_manager import PipelineManager
-
+from config.enum import PipelineName, IntentType
 
 INTENT_TO_PIPELINE_MAP = {
-    "refund_request": "refund-pipeline",
-    "other": "other-pipeline"
+    IntentType.REFUND_REQUEST: PipelineName.REFUND,
+    IntentType.OTHER: PipelineName.OTHER
 }
 
 class QueryAnalysis(BaseModel):

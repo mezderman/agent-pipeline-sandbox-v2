@@ -13,6 +13,7 @@ from nodes.query_router_node import QueryRouterNode, QueryAnalysis
 from core.pipeline_manager import PipelineManager
 from nodes.refund_node import RefundNode
 from nodes.other_node import OtherNode
+from config.enum import PipelineName
 
 
 
@@ -46,9 +47,9 @@ refund_node = RefundNode("refund-node")
 other_node = OtherNode("other-node")
 
 # Create the pipelines with names
-router_pipeline = Pipeline("query-router-pipeline")
-refund_pipeline = Pipeline("refund-pipeline")
-other_pipeline = Pipeline("other-pipeline")
+router_pipeline = Pipeline(PipelineName.ROUTER)
+refund_pipeline = Pipeline(PipelineName.REFUND)
+other_pipeline = Pipeline(PipelineName.OTHER)
 
 # Add nodes to pipelines
 router_pipeline.add_node(query_router_node)
