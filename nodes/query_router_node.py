@@ -6,6 +6,12 @@ from openai import OpenAI
 from core.memory import Memory
 from core.pipeline_manager import PipelineManager
 
+
+INTENT_TO_PIPELINE_MAP = {
+    "refund_request": "refund-pipeline",
+    "other": "other-pipeline"
+}
+
 class QueryAnalysis(BaseModel):
     intent: Literal["refund_request", "other"] = Field(
         ...,
@@ -17,11 +23,11 @@ class QueryAnalysis(BaseModel):
     )
 
 class QueryRouterNode(Node):
-    def __init__(self, name, intent_to_pipeline_map):
+    def __init__(self, name):
         super().__init__(name)
         self.memory = Memory()
         self.client = OpenAI()
-        self.intent_to_pipeline_map = intent_to_pipeline_map
+
         
     def process(self, data):
         self.set_input_data(data)
@@ -45,12 +51,14 @@ class QueryRouterNode(Node):
         self.set_output_data(analyzed_query)
         
         pipeline_manager = PipelineManager.get_instance()
-        if analyzed_query.intent == "refund_request":
-            print("starting refund pipeline")
-            pipeline_result = pipeline_manager.run_pipeline("refund-pipeline", data)
-        else:
-            print("starting other pipeline")
-            pipeline_result = pipeline_manager.run_pipeline("other-pipeline", data)
+        pipeline_name = INTENT_TO_PIPELINE_MAP[analyzed_query.intent]
+        pipeline_result = pipeline_manager.run_pipeline(pipeline_name, data)
+        # if analyzed_query.intent == "refund_request":
+        #     print("starting refund pipeline")
+        #     pipeline_result = pipeline_manager.run_pipeline("refund-pipeline", data)
+        # else:
+        #     print("starting other pipeline")
+        #     pipeline_result = pipeline_manager.run_pipeline("other-pipeline", data)
             
         
         return pipeline_result
