@@ -131,24 +131,13 @@ final_result = pipeline_manager.run_pipeline("query-router-pipeline", message_da
 
 print("Final Result:", final_result)
 
-class CustomJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        # Handle specific custom objects
-        if hasattr(obj, '__dict__'):
-            return obj.__dict__
-        # Add more custom object handling if needed
-        try:
-            # Try to convert the object to a dict
-            return vars(obj)
-        except:
-            # If all else fails, try string representation
-            return str(obj)
+
 
 # After running the pipeline
-logs = pipeline_manager.get_pipelines_data_logger()
-formatted_logs = json.dumps(logs, indent=2, cls=CustomJSONEncoder)
+logs = pipeline_manager.get_pipelines_data_logger_json()
+
 print("\nPipeline Execution Logs:")
-print(formatted_logs)
+print(logs)
 
 # msg={
 #         "role": "assistant",

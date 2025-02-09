@@ -1,3 +1,5 @@
+import json
+
 class PipelineManager:
     _instance = None
     
@@ -46,6 +48,8 @@ class PipelineManager:
     def get_pipelines_path(self):
         return self.pipelines_path
     
+    
+    
     def get_pipelines_data_logger(self):
         pipeline_logs = []
         
@@ -68,3 +72,23 @@ class PipelineManager:
                 pipeline_logs.append(pipeline_data)
         
         return pipeline_logs
+    
+    def get_pipelines_data_logger_json(self):
+        logs = self.get_pipelines_data_logger()
+        formatted_logs = json.dumps(logs, indent=2, cls=self.CustomJSONEncoder)
+        return formatted_logs
+    
+    class CustomJSONEncoder(json.JSONEncoder):
+        def default(self, obj):
+            # Handle specific custom objects
+            if hasattr(obj, '__dict__'):
+                return obj.__dict__
+            # Add more custom object handling if needed
+            try:
+                # Try to convert the object to a dict
+                return vars(obj)
+            except:
+                # If all else fails, try string representation
+                return str(obj)
+    
+
