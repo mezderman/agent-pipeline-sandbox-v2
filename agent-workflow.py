@@ -9,8 +9,10 @@ from tools.transaction_details import get_transaction_details
 from core.memory import Memory
 from core.Pipeline import Pipeline
 from core.node import Node
-from nodes.query_router import QueryAnalysis, QueryRouter
+from nodes.query_router_node import QueryRouterNode, QueryAnalysis
 from core.pipeline_manager import PipelineManager
+from nodes.refund_node import RefundNode
+from nodes.other_node import OtherNode
 
 
 class FinalDecision(BaseModel):
@@ -95,22 +97,41 @@ load_dotenv()
 message_data = load_message()
 memory = Memory()
 
-#create the pipeline
-pipeline = Pipeline()
-pipeline.add_node(QueryRouter("Analyze Query Node"))
-        
 
-# Registering pipelines
-pipeline_manager = PipelineManager("query-router")
-pipeline_manager.register_pipeline(pipeline)
 
-#run the pipeline
-result = pipeline_manager.run_pipeline("query-router", message_data)
-print(result)
-# completion = analyze_query(client)
-# # messages.append(completion.choices[0].message)
-# analyzed_query = completion.choices[0].message.parsed
+# Define the mapping of intents to pipelines
+intent_to_pipeline_map = {
+    "refund_request": "refund-pipeline",
+    "other": "other-pipeline"
+}
 
+# Initialize the nodes
+query_router_node = QueryRouterNode("query-router-node", intent_to_pipeline_map)
+refund_node = RefundNode("refund-node")
+other_node = OtherNode("other-node")
+
+# Create the main router pipeline
+router_pipeline = Pipeline()
+router_pipeline.add_node(query_router_node)
+
+# Create the refund pipeline
+refund_pipeline = Pipeline()
+refund_pipeline.add_node(refund_node)
+
+# Create the other pipeline
+other_pipeline = Pipeline()
+other_pipeline.add_node(other_node)
+
+# Register all pipelines
+pipeline_manager = PipelineManager("query-router-pipeline")
+pipeline_manager.register_pipeline(router_pipeline, "query-router-pipeline")
+pipeline_manager.register_pipeline(refund_pipeline, "refund-pipeline")
+pipeline_manager.register_pipeline(other_pipeline, "other-pipeline")
+
+# Run the entire pipeline sequence and get the final result
+final_result = pipeline_manager.run_pipeline("query-router-pipeline", message_data)
+
+print("Final Result:", final_result)
 
 
 # msg={
@@ -174,6 +195,11 @@ print(result)
 #     # print(messages)
 # else:
 #     print("Other")
+
+ 
+ 
+ 
+
 
 
 

@@ -4,25 +4,37 @@ class PipelineManager:
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super(PipelineManager, cls).__new__(cls)
-            cls._instance.pipelines = {}
-            cls._instance.name = args[0] if args else None
         return cls._instance
 
     def __init__(self, name=None):
-        if not hasattr(self, 'name'):
+        if not hasattr(self, 'initialized'):
+            self.pipelines = {}
             self.name = name
+            self.initialized = True
 
-    def register_pipeline(self, pipeline):
-        """Register a pipeline with the manager"""
-        self.pipelines[self.name] = pipeline
+    @classmethod
+    def get_instance(cls):
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
+
+    def register_pipeline(self, pipeline, name=None):
+        """Register a pipeline with the manager
+        Args:
+            pipeline: Pipeline instance to register
+            name: Optional name for the pipeline. If not provided, uses self.name
+        """
+        pipeline_name = name if name else self.name
+        self.pipelines[pipeline_name] = pipeline
 
     def get_pipeline(self, name):
         """Get a pipeline by name"""
         return self.pipelines.get(name)
     
-    def run_pipeline(self, pipeline_name, data):
+    def run_pipeline(self, name, message_data):
         """Executes a specified pipeline."""
-        if pipeline_name in self.pipelines:
-            return self.pipelines[pipeline_name].run(data)
+        pipeline = self.pipelines.get(name)
+        if pipeline:
+            return pipeline.run(message_data)
         else:
-            return f"Pipeline {pipeline_name} not found!"
+            raise ValueError(f"Pipeline {name} not found")
