@@ -1,9 +1,9 @@
-from core.memory import Memory
-from openai import OpenAI
-from pydantic import BaseModel, Field
-from typing import Literal, List
-from core.node import Node
 import json
+from typing import Literal
+from pydantic import BaseModel, Field
+from core.node import Node
+from openai import OpenAI
+from core.memory import Memory
 
 class QueryAnalysis(BaseModel):
     intent: Literal["refund_request", "other"] = Field(
@@ -15,7 +15,7 @@ class QueryAnalysis(BaseModel):
         description="Explanation of why the intent was classified this way"
     )
 
-class AnalyzeQuery(Node):
+class QueryRouter(Node):
     def __init__(self, name):
         self.memory = Memory()
         self.client = OpenAI()
@@ -31,8 +31,7 @@ class AnalyzeQuery(Node):
                     })
         completion = self.completion(self.client)
         analyzed_query = completion.choices[0].message.parsed
-        print(analyzed_query.intent)
-        return completion
+        return analyzed_query
 
     def completion(self, client: OpenAI):
         completion = client.beta.chat.completions.parse(

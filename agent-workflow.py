@@ -9,7 +9,8 @@ from tools.transaction_details import get_transaction_details
 from core.memory import Memory
 from core.Pipeline import Pipeline
 from core.node import Node
-from pipelines.analyze_query import AnalyzeQuery, QueryAnalysis
+from nodes.query_router import QueryAnalysis, QueryRouter
+from core.pipeline_manager import PipelineManager
 
 
 class FinalDecision(BaseModel):
@@ -93,12 +94,19 @@ load_dotenv()
 
 message_data = load_message()
 memory = Memory()
+
+#create the pipeline
 pipeline = Pipeline()
-pipeline.add_node(AnalyzeQuery("Analyze Query Node"))
+pipeline.add_node(QueryRouter("Analyze Query Node"))
         
 
-output = pipeline.run(message_data)
-# print(output)
+# Registering pipelines
+pipeline_manager = PipelineManager("query-router")
+pipeline_manager.register_pipeline(pipeline)
+
+#run the pipeline
+result = pipeline_manager.run_pipeline("query-router", message_data)
+print(result)
 # completion = analyze_query(client)
 # # messages.append(completion.choices[0].message)
 # analyzed_query = completion.choices[0].message.parsed
