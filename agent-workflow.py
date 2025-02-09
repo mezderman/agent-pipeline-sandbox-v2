@@ -129,7 +129,7 @@ pipeline_manager.register_pipeline(other_pipeline)
 # Run the entire pipeline sequence and get the final result
 final_result = pipeline_manager.run_pipeline("query-router-pipeline", message_data)
 
-print("Final Result:", final_result)
+print("\nFinal Result:\n", final_result)
 
 
 
@@ -139,13 +139,8 @@ logs = pipeline_manager.get_pipelines_data_logger_json()
 print("\nPipeline Execution Logs:")
 print(logs)
 
-# msg={
-#         "role": "assistant",
-#         "content": f"""
-#             Intent: {analyzed_query.intent}
-#         """
-#     }
-
+print("\nMemory:")
+print(memory.get_messages())
 # memory.add_message(msg)
 
 # # print("Messages:")

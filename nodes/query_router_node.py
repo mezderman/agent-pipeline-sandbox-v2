@@ -35,6 +35,13 @@ class QueryRouterNode(Node):
                     })
         completion = self.completion(self.client)
         analyzed_query = completion.choices[0].message.parsed
+        msg={
+            "role": "assistant",
+            "content": f"""
+                Intent: {analyzed_query.intent}
+            """
+        }
+        self.memory.add_message(msg)
         self.set_output_data(analyzed_query)
         
         pipeline_manager = PipelineManager.get_instance()
