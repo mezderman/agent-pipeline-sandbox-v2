@@ -8,8 +8,10 @@ class RefundNode(Node):
         
     def process(self, data):
         print("Processing refund request...")
-        return {
-            "status": "processing",
-            "type": "refund",
-            "data": data
-        } 
+        self.set_input_data(data)
+        self.set_output_data({
+            "status": "completed",
+            "type": "refund"
+        })
+
+        return self.get_output_data()

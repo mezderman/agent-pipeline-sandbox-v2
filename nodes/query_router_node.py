@@ -24,6 +24,7 @@ class QueryRouterNode(Node):
         self.intent_to_pipeline_map = intent_to_pipeline_map
         
     def process(self, data):
+        self.set_input_data(data)
         self.memory.add_message({
                 "role": "developer",
                 "content": """ Analyze the user query and classify its intent."""
@@ -34,6 +35,7 @@ class QueryRouterNode(Node):
                     })
         completion = self.completion(self.client)
         analyzed_query = completion.choices[0].message.parsed
+        self.set_output_data(analyzed_query)
         
         pipeline_manager = PipelineManager.get_instance()
         if analyzed_query.intent == "refund_request":
@@ -43,11 +45,8 @@ class QueryRouterNode(Node):
             print("starting other pipeline")
             pipeline_result = pipeline_manager.run_pipeline("other-pipeline", data)
             
-        # Combine the analysis with the pipeline result
-        return {
-            "pipeline_result": pipeline_result,
-            "analysis": analyzed_query
-        }
+        
+        return pipeline_result
 
     def completion(self, client: OpenAI):
         completion = client.beta.chat.completions.parse(

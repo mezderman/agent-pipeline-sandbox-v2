@@ -7,6 +7,23 @@ class Node:
         :param process_function: A function that defines the node's operation.
         """
         self.name = name
+        self.inputData = []
+        self.outputData = []
+
+    def get_name(self):
+        return self.name
+    
+    def get_input_data(self):
+        return self.inputData
+    
+    def get_output_data(self):
+        return self.outputData
+    
+    def set_input_data(self, data):
+        self.inputData = data
+    
+    def set_output_data(self, data):
+        self.outputData = data
 
     def process(self, data):
         """

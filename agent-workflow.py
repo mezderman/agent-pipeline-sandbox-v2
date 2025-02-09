@@ -110,29 +110,45 @@ query_router_node = QueryRouterNode("query-router-node", intent_to_pipeline_map)
 refund_node = RefundNode("refund-node")
 other_node = OtherNode("other-node")
 
-# Create the main router pipeline
-router_pipeline = Pipeline()
+# Create the pipelines with names
+router_pipeline = Pipeline("query-router-pipeline")
+refund_pipeline = Pipeline("refund-pipeline")
+other_pipeline = Pipeline("other-pipeline")
+
+# Add nodes to pipelines
 router_pipeline.add_node(query_router_node)
-
-# Create the refund pipeline
-refund_pipeline = Pipeline()
 refund_pipeline.add_node(refund_node)
-
-# Create the other pipeline
-other_pipeline = Pipeline()
 other_pipeline.add_node(other_node)
 
-# Register all pipelines
-pipeline_manager = PipelineManager("query-router-pipeline")
-pipeline_manager.register_pipeline(router_pipeline, "query-router-pipeline")
-pipeline_manager.register_pipeline(refund_pipeline, "refund-pipeline")
-pipeline_manager.register_pipeline(other_pipeline, "other-pipeline")
+# Register pipelines (now using the pipeline's name)
+pipeline_manager = PipelineManager()
+pipeline_manager.register_pipeline(router_pipeline)
+pipeline_manager.register_pipeline(refund_pipeline)
+pipeline_manager.register_pipeline(other_pipeline)
 
 # Run the entire pipeline sequence and get the final result
 final_result = pipeline_manager.run_pipeline("query-router-pipeline", message_data)
 
 print("Final Result:", final_result)
 
+class CustomJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        # Handle specific custom objects
+        if hasattr(obj, '__dict__'):
+            return obj.__dict__
+        # Add more custom object handling if needed
+        try:
+            # Try to convert the object to a dict
+            return vars(obj)
+        except:
+            # If all else fails, try string representation
+            return str(obj)
+
+# After running the pipeline
+logs = pipeline_manager.get_pipelines_data_logger()
+formatted_logs = json.dumps(logs, indent=2, cls=CustomJSONEncoder)
+print("\nPipeline Execution Logs:")
+print(formatted_logs)
 
 # msg={
 #         "role": "assistant",

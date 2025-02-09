@@ -1,7 +1,12 @@
 class Pipeline:
-    def __init__(self):
+    def __init__(self, name):
         """Initialize an empty pipeline."""
         self.nodes = []
+        self.dataLogger = []
+        self.name = name
+
+    def get_name(self):
+        return self.name
 
     def add_node(self, node):
         """
@@ -10,6 +15,9 @@ class Pipeline:
         :param node: An instance of the Node class.
         """
         self.nodes.append(node)
+    
+    def get_data_logger(self):
+        return self.dataLogger
 
     def run(self, data):
         """
@@ -20,4 +28,5 @@ class Pipeline:
         """
         for node in self.nodes:
             data = node.process(data)
+            self.dataLogger.append(data)
         return data
