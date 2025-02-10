@@ -43,7 +43,7 @@ class QueryRouterNode(Node):
         analyzed_query = self.completion(self.client)
        
         self.save_output_data(analyzed_query)
-        pipeline_result = self.run_next_pipeline(analyzed_query)
+        pipeline_result = self.run_next_pipeline()
 
         return pipeline_result
 
