@@ -54,13 +54,6 @@ class QueryRouterNode(Node):
         return pipeline_result
 
     def save_output_data(self, analyzed_query):
-        msg={
-                "role": "assistant",
-                "content": f"""
-                    Intent: {analyzed_query.intent}
-                """
-            }
-        self.memory.add_message(msg)
         self.set_output_data(analyzed_query)
 
     def completion(self, client: OpenAI):
