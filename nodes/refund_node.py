@@ -30,7 +30,7 @@ class RefundNode(Node):
 
     def process(self, data):
         print("Processing refund request...")
-        self.set_input_data(data)
+        super().process(data)
         completion = self.plan_resolution(self.client)
         self.memory.add_message({
             "role": "assistant",

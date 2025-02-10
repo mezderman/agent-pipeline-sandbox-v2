@@ -30,7 +30,7 @@ class QueryRouterNode(Node):
 
         
     def process(self, data):
-        self.set_input_data(data)
+        super().process(data)
         self.memory.add_message({
                 "role": "developer",
                 "content": """ Analyze the user query and classify its intent."""

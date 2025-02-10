@@ -26,11 +26,6 @@ class Node:
         self.outputData = data
 
     def process(self, data):
-        """
-        Process the data using the node's processing function.
-        
-        :param data: The input data for the node.
-        :return: The processed data.
-        """
         print(f"Processing node: {self.name}")
+        self.set_input_data(data)
         return data
