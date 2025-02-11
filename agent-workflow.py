@@ -45,7 +45,7 @@ other_pipeline.add_node(other_node)
 pipeline_manager = PipelineManager.get_instance()
 pipeline_manager.register_pipeline(router_pipeline)
 pipeline_manager.register_pipeline(refund_pipeline)
-pipeline_manager.register_pipeline(other_pipeline)
+pipeline_manager.register_pipeline(other_pipeline)  
 
 # Run the entire pipeline sequence and get the final result
 final_result = pipeline_manager.run_pipeline("query-router-pipeline", message_data)
@@ -59,3 +59,5 @@ logs = pipeline_manager.get_pipelines_data_logger_json()
 
 print("\nPipeline Execution Logs:")
 print(logs)
+
+pipeline_manager.get_detailed_pipeline_map()
