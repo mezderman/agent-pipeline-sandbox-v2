@@ -3,7 +3,6 @@ from typing import Literal
 from pydantic import BaseModel, Field
 from core.node import Node
 from openai import OpenAI
-from core.memory import Memory
 from core.pipeline_manager import PipelineManager
 from config.enum import PipelineName, IntentType
 
@@ -25,7 +24,6 @@ class QueryAnalysis(BaseModel):
 class QueryRouterNode(Node):
     def __init__(self, name):
         super().__init__(name)
-        self.memory = Memory()
         self.client = OpenAI()
 
         

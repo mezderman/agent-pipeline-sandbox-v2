@@ -1,11 +1,9 @@
 from core.node import Node
-from core.memory import Memory
 from openai import OpenAI
 
 class ValidateRefundNode(Node):
     def __init__(self, name):
         self.name = name
-        self.memory = Memory()
         self.client = OpenAI()
 
     def process(self, data):

@@ -1,7 +1,6 @@
 
 from dotenv import load_dotenv
 import json
-from core.memory import Memory
 from core.Pipeline import Pipeline
 from nodes.query_router_node import QueryRouterNode 
 from core.pipeline_manager import PipelineManager
@@ -24,7 +23,6 @@ def load_message():
 load_dotenv()
 
 message_data = load_message()
-memory = Memory()
 
 # Initialize the nodes
 query_router_node = QueryRouterNode("query-router-node")
