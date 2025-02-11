@@ -31,16 +31,17 @@ class QueryRouterNode(Node):
         
     def process(self, data):
         super().process(data)
-        self.memory.add_message({
+        msg= [
+            {
                 "role": "developer",
                 "content": """ Analyze the user query and classify its intent."""
-        })
-        self.memory.add_message({
-                        "role": "user",
-                        "content": json.dumps(data)
-                    })
-        
-        analyzed_query = self.completion(self.client)
+            },
+            {
+                "role": "user",
+                "content": json.dumps(data)
+            }
+        ]
+        analyzed_query = self.completion(self.client, msg)
        
         self.save_output_data(analyzed_query)
         pipeline_result = self.run_next_pipeline()
@@ -56,10 +57,10 @@ class QueryRouterNode(Node):
     def save_output_data(self, analyzed_query):
         self.set_output_data(analyzed_query)
 
-    def completion(self, client: OpenAI):
+    def completion(self, client: OpenAI, msg):
         completion = client.beta.chat.completions.parse(
             model="gpt-4o-2024-08-06",
-            messages=self.memory.get_messages(),
+            messages=msg,
             response_format=QueryAnalysis
         )
         analyzed_query = completion.choices[0].message.parsed

@@ -61,6 +61,3 @@ logs = pipeline_manager.get_pipelines_data_logger_json()
 
 print("\nPipeline Execution Logs:")
 print(logs)
-
-print("\nMemory:")
-print(memory.get_messages())
