@@ -77,12 +77,8 @@ class RefundNode(Node):
             print(f"\n🔧 Executing tool: {name}")
             print(f"   Arguments: {args}")
 
-            # Execute the appropriate tool
             result = globals()[name](**args)
-            # if name == "get_refund_policy":
-            #     result = get_refund_policy()
-            # elif name == "get_transaction_details":
-            #     result = get_transaction_details(**args)
+           
             
             print(f"   Result received: {result is not None}")
             messages.append({
