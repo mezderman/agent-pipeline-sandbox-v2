@@ -6,6 +6,7 @@ from tools.tool_schemas import tools
 import json
 from typing import Literal, List
 from pydantic import BaseModel, Field
+from core.tool_registry import ToolRegistry
 
 class FinalDecision(BaseModel):
     decision: Literal["refund_eligible", "refund_not_eligible"] = Field(
@@ -25,6 +26,11 @@ class RefundNode(Node):
     def __init__(self, name):
         self.name = name
         self.client = OpenAI()
+        
+        # Register tools
+        registry = ToolRegistry.get_instance()
+        registry.register_tool("get_refund_policy", get_refund_policy)
+        registry.register_tool("get_transaction_details", get_transaction_details)
 
     def process(self, data):
         print("Processing refund request...")
@@ -51,8 +57,10 @@ class RefundNode(Node):
     def plan_resolution(self, client: OpenAI):
         msg = [{
             "role": "developer",
-            "content": """ Analyze the user refund request.
+            "content": f""" Analyze the user refund request.
                         Try to resolve the user request using the tools provided.generate step by step plan to resolve the request
+                        Customer ID: {self.get_input_data().customer_id}
+                        Order ID: {self.get_input_data().order_id}
                     """
         }]
 
@@ -64,29 +72,6 @@ class RefundNode(Node):
         
         return completion
     
-    
-    
-    def execute_tools(self, message):
-        messages = []
-        messages.append(message)
-        tool_calls = message.tool_calls
-        for tool_call in tool_calls:
-            name = tool_call.function.name
-            args = json.loads(tool_call.function.arguments)
-            
-            print(f"\n🔧 Executing tool: {name}")
-            print(f"   Arguments: {args}")
-
-            result = globals()[name](**args)
-           
-            
-            print(f"   Result received: {result is not None}")
-            messages.append({
-                "role": "tool",
-                "tool_call_id": tool_call.id,
-                "content": json.dumps(result)
-            })
-        return messages
 
     def final_decision(self,client: OpenAI, messages):
         msg = {

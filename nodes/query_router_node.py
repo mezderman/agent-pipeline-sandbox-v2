@@ -16,6 +16,14 @@ class QueryAnalysis(BaseModel):
         ...,
         description="Classification of the query intent: either 'refund_request' or 'other'"
     )
+    customer_id: str = Field(
+        ...,
+        description="Customer ID"
+    )
+    order_id: str = Field(
+        ...,
+        description="Order ID"
+    )
     reason: str = Field(
         ...,
         description="Explanation of why the intent was classified this way"
@@ -40,7 +48,7 @@ class QueryRouterNode(Node):
             }
         ]
         analyzed_query = self.completion(self.client, msg)
-       
+        
         self.save_output_data(analyzed_query)
         pipeline_result = self.run_next_pipeline()
 
