@@ -3,12 +3,7 @@ from core.tool_registry import ToolRegistry
 
 class Node:
     def __init__(self, name):
-        """
-        Initialize a Node with a name and a processing function.
-        
-        :param name: The name of the node.
-        :param process_function: A function that defines the node's operation.
-        """
+
         self.name = name
         self.inputData = []
         self.outputData = []
