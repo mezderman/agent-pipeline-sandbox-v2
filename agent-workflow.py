@@ -1,15 +1,11 @@
 
 from dotenv import load_dotenv
 import json
-from core.Pipeline import Pipeline
-from nodes.query_router_node import QueryRouterNode 
 from core.pipeline_manager import PipelineManager
-from nodes.refund_node import RefundNode
-from nodes.other_node import OtherNode
-from nodes.validate_refund import ValidateRefundNode
 from config.enum import PipelineName
-
-
+from pipelines.router_pipeline import RouterPipeline
+from pipelines.refund_pipeline import RefundPipeline
+from pipelines.other_pipeline import OtherPipeline
 
 def load_message():
     try:
@@ -19,35 +15,23 @@ def load_message():
     except Exception as e:
         print(f"Error loading message: {e}")
         return None
-    
-load_dotenv()
 
+
+load_dotenv()
+pipeline_manager = PipelineManager.get_instance()
 message_data = load_message()
 
-# Initialize the nodes
-query_router_node = QueryRouterNode("query-router-node")
-refund_node = RefundNode("refund-node")
-validate_refund_node = ValidateRefundNode("validate-refund-node")
-other_node = OtherNode("other-node")
+# Create pipelines
+other_pipeline = OtherPipeline(PipelineName.OTHER)
+refund_pipeline = RefundPipeline(PipelineName.REFUND)
+router_pipeline = RouterPipeline(PipelineName.ROUTER)
 
-# Create the pipelines with names
-router_pipeline = Pipeline(PipelineName.ROUTER)
-refund_pipeline = Pipeline(PipelineName.REFUND)
-other_pipeline = Pipeline(PipelineName.OTHER)
-
-# Add nodes to pipelines
-router_pipeline.add_node(query_router_node)
-refund_pipeline.add_node(refund_node)
-refund_pipeline.add_node(validate_refund_node)
-other_pipeline.add_node(other_node)
-
-# Register pipelines (now using the pipeline's name)
-pipeline_manager = PipelineManager.get_instance()
+# Register pipelines
 pipeline_manager.register_pipeline(router_pipeline)
 pipeline_manager.register_pipeline(refund_pipeline)
 pipeline_manager.register_pipeline(other_pipeline)  
 
-# Run the entire pipeline sequence and get the final result
+# Run the pipeline
 final_result = pipeline_manager.run_pipeline("query-router-pipeline", message_data)
 
 print("\nFinal Result:\n", final_result)
