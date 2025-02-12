@@ -36,8 +36,6 @@ final_result = pipeline_manager.run_pipeline("query-router-pipeline", message_da
 
 print("\nFinal Result:\n", final_result)
 
-
-
 # After running the pipeline
 logs = pipeline_manager.get_pipelines_data_logger_json()
 

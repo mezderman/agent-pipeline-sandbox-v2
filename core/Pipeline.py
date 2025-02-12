@@ -4,29 +4,36 @@ class Pipeline:
         self.nodes = []
         self.dataLogger = []
         self.name = name
+        self.inputData = []
+        self.outputData = []
 
     def get_name(self):
         return self.name
 
     def add_node(self, node):
-        """
-        Add a node to the pipeline.
-        
-        :param node: An instance of the Node class.
-        """
         self.nodes.append(node)
     
     def get_data_logger(self):
         return self.dataLogger
+    
+    def get_input_data(self):
+        return self.inputData
+    
+    def get_output_data(self):
+        return self.outputData
+    
+    def set_input_data(self, data):
+        self.inputData = data
+    
+    def set_output_data(self, data):
+        self.outputData = data
 
     def run(self, data):
-        """
-        Run the pipeline with the given data.
-        
-        :param data: The initial input data for the pipeline.
-        :return: The final output after processing through all nodes.
-        """
+        self.set_input_data(data)
         for node in self.nodes:
             data = node.process(data)
             self.dataLogger.append(data)
+        self.set_output_data(data)
         return data
+    
+    
