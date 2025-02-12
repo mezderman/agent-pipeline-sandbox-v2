@@ -64,6 +64,8 @@ class RefundNode(Node):
         
         return completion
     
+    
+    
     def execute_tools(self, message):
         messages = []
         messages.append(message)
@@ -76,10 +78,11 @@ class RefundNode(Node):
             print(f"   Arguments: {args}")
 
             # Execute the appropriate tool
-            if name == "get_refund_policy":
-                result = get_refund_policy()
-            elif name == "get_transaction_details":
-                result = get_transaction_details(**args)
+            result = globals()[name](**args)
+            # if name == "get_refund_policy":
+            #     result = get_refund_policy()
+            # elif name == "get_transaction_details":
+            #     result = get_transaction_details(**args)
             
             print(f"   Result received: {result is not None}")
             messages.append({
