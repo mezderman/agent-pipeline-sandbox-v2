@@ -58,3 +58,8 @@ class Node:
                 "content": json.dumps(result)
             })
         return messages
+
+    def register_tools(self, tools: dict):
+        registry = ToolRegistry.get_instance()
+        for name, func in tools.items():
+            registry.register_tool(name, func)

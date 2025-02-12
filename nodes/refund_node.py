@@ -27,10 +27,11 @@ class RefundNode(Node):
         self.name = name
         self.client = OpenAI()
         
-        # Register tools
-        registry = ToolRegistry.get_instance()
-        registry.register_tool("get_refund_policy", get_refund_policy)
-        registry.register_tool("get_transaction_details", get_transaction_details)
+        # Register tools using parent method
+        self.register_tools({
+            "get_refund_policy": get_refund_policy,
+            "get_transaction_details": get_transaction_details
+        })
 
     def process(self, data):
         print("Processing refund request...")
