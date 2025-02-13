@@ -99,79 +99,79 @@ class PipelineManager:
                 # If all else fails, try string representation
                 return str(obj)
     
-    def get_detailed_pipeline_map(self) -> None:
-        """
-        Generate and print a detailed visual representation of all pipeline connections and nodes
-        """
-        def add_indent_line(level: int) -> str:
-            return "    │" + "    │" * level
+    # def get_detailed_pipeline_map(self) -> None:
+    #     """
+    #     Generate and print a detailed visual representation of all pipeline connections and nodes
+    #     """
+    #     def add_indent_line(level: int) -> str:
+    #         return "    │" + "    │" * level
 
-        def add_branch_line(level: int) -> str:
-            return "    ├────" + "    " * level
+    #     def add_branch_line(level: int) -> str:
+    #         return "    ├────" + "    " * level
 
-        def add_last_branch_line(level: int) -> str:
-            return "    └────" + "    " * level
+    #     def add_last_branch_line(level: int) -> str:
+    #         return "    └────" + "    " * level
 
-        # Header
-        print("\n🗺️  Complete Pipeline Map")
-        print("=" * 50)
+    #     # Header
+    #     print("\n🗺️  Complete Pipeline Map")
+    #     print("=" * 50)
 
-        # Start with query router pipeline as it's the entry point
-        entry_pipeline = self.pipelines.get("query-router-pipeline")
-        if not entry_pipeline:
-            print("\n❌ No query router pipeline found!")
-            return
+    #     # Start with query router pipeline as it's the entry point
+    #     entry_pipeline = self.pipelines.get("query-router-pipeline")
+    #     if not entry_pipeline:
+    #         print("\n❌ No query router pipeline found!")
+    #         return
 
-        def process_pipeline(pipeline_name: str, visited: set, level: int = 0):
-            if pipeline_name in visited:
-                print(f"{add_branch_line(level)}↩️ Back to {pipeline_name}")
-                return
+        # def process_pipeline(pipeline_name: str, visited: set, level: int = 0):
+        #     if pipeline_name in visited:
+        #         print(f"{add_branch_line(level)}↩️ Back to {pipeline_name}")
+        #         return
             
-            visited.add(pipeline_name)
-            pipeline = self.pipelines.get(pipeline_name)
+        #     visited.add(pipeline_name)
+        #     pipeline = self.pipelines.get(pipeline_name)
             
-            if not pipeline:
-                print(f"{add_branch_line(level)}❌ Pipeline {pipeline_name} not found!")
-                return
+        #     if not pipeline:
+        #         print(f"{add_branch_line(level)}❌ Pipeline {pipeline_name} not found!")
+        #         return
 
-            # Print pipeline name
-            print(f"\n{'    ' * level}📎 Pipeline: {pipeline_name}")
+        #     # Print pipeline name
+        #     print(f"\n{'    ' * level}📎 Pipeline: {pipeline_name}")
             
-            # Print nodes
-            for i, node in enumerate(pipeline.nodes):
-                is_last_node = i == len(pipeline.nodes) - 1
-                prefix = add_last_branch_line(level) if is_last_node else add_branch_line(level)
+        #     # Print nodes
+        #     for i, node in enumerate(pipeline.nodes):
+        #         is_last_node = i == len(pipeline.nodes) - 1
+        #         prefix = add_last_branch_line(level) if is_last_node else add_branch_line(level)
                 
-                print(f"{prefix}📍 Node: {node.name}")
+        #         print(f"{prefix}📍 Node: {node.name}")
                 
-                # If it's a router node, show and process next pipelines
-                if hasattr(node, 'run_next_pipeline'):
-                    print(f"{add_indent_line(level)}    Routes based on intent:")
+        #         # If it's a router node, show and process next pipelines
+        #         if hasattr(node, 'run_next_pipeline'):
+        #             print(f"{add_indent_line(level)}    Routes based on intent:")
                     
-                    # Get the routing map from the node's module
-                    routing_map = INTENT_TO_PIPELINE_MAP
+        #             # Get the routing map from the node's module
+        #             routing_map = INTENT_TO_PIPELINE_MAP
                     
-                    for intent, next_pipeline in routing_map.items():
-                        print(f"{add_indent_line(level)}    ├── If {intent.value}")
-                        print(f"{add_indent_line(level)}    │   └──➤ {next_pipeline.value}")
+        #             for intent, next_pipeline in routing_map.items():
+        #                 print(f"{add_indent_line(level)}    ├── If {intent.value}")
+        #                 print(f"{add_indent_line(level)}    │   └──➤ {next_pipeline.value}")
                         
-                        # Recursively process connected pipelines
-                        if next_pipeline.value not in visited:
-                            process_pipeline(next_pipeline.value, visited, level + 1)
+        #                 # Recursively process connected pipelines
+        #                 if next_pipeline.value not in visited:
+        #                     process_pipeline(next_pipeline.value, visited, level + 1)
 
-        # Start processing from the entry pipeline
-        process_pipeline("query-router-pipeline", set())
+        # # Start processing from the entry pipeline
+        # process_pipeline("query-router-pipeline", set())
 
-    def print_help(self):
-        """
-        Print help information about pipelines and their connections
-        """
-        print("\n🔍 Pipeline System Help")
-        print("=" * 50)
-        print("\nAvailable Commands:")
-        print("  • help    - Show this help message")
-        print("  • list    - List all registered pipelines")
-        print("  • run     - Run a pipeline with input data")
-        print("\nSystem Structure:")
-        self.get_detailed_pipeline_map()
+    # def print_help(self):
+    #     """
+    #     Print help information about pipelines and their connections
+    #     """
+    #     print("\n🔍 Pipeline System Help")
+    #     print("=" * 50)
+    #     print("\nAvailable Commands:")
+    #     print("  • help    - Show this help message")
+    #     print("  • list    - List all registered pipelines")
+    #     print("  • run     - Run a pipeline with input data")
+    #     print("\nSystem Structure:")
+    #     self.get_detailed_pipeline_map()
 
