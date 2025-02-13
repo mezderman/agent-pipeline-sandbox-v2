@@ -1,4 +1,3 @@
-
 from dotenv import load_dotenv
 import json
 from core.pipeline_manager import PipelineManager
@@ -6,6 +5,7 @@ from config.enum import PipelineName
 from pipelines.router_pipeline import RouterPipeline
 from pipelines.refund_pipeline import RefundPipeline
 from pipelines.other_pipeline import OtherPipeline
+from config.pipelines_mapping import INTENT_TO_PIPELINE_MAP  # Import the mapping
 
 def load_message():
     try:
@@ -18,7 +18,8 @@ def load_message():
 
 
 load_dotenv()
-pipeline_manager = PipelineManager.get_instance()
+# Initialize with the mapping
+pipeline_manager = PipelineManager.get_instance(pipeline_mapping=INTENT_TO_PIPELINE_MAP)
 message_data = load_message()
 
 # Create pipelines
@@ -26,7 +27,7 @@ other_pipeline = OtherPipeline(PipelineName.OTHER)
 refund_pipeline = RefundPipeline(PipelineName.REFUND)
 router_pipeline = RouterPipeline(PipelineName.ROUTER)
 
-# Register pipelines
+# Register pipelines    
 pipeline_manager.register_pipeline(router_pipeline)
 pipeline_manager.register_pipeline(refund_pipeline)
 pipeline_manager.register_pipeline(other_pipeline)  

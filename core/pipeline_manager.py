@@ -1,11 +1,6 @@
 import json
 from config.enum import IntentType, PipelineName
-
-#we need to remove this from core
-INTENT_TO_PIPELINE_MAP = {
-    IntentType.REFUND_REQUEST: PipelineName.REFUND,
-    IntentType.OTHER: PipelineName.OTHER
-}
+from config.pipelines_mapping import INTENT_TO_PIPELINE_MAP
 
 class PipelineManager:
     _instance = None
@@ -15,17 +10,17 @@ class PipelineManager:
             cls._instance = super(PipelineManager, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self, name=None):
+    def __init__(self, pipeline_mapping=None):
         if not hasattr(self, 'initialized'):
             self.pipelines = {}
-            self.name = name
             self.initialized = True
             self.pipelines_path = []
+            self.pipeline_mapping = pipeline_mapping
 
     @classmethod
-    def get_instance(cls):
+    def get_instance(cls, pipeline_mapping=None):
         if cls._instance is None:
-            cls._instance = cls()
+            cls._instance = cls(pipeline_mapping=pipeline_mapping)
         return cls._instance
 
     def register_pipeline(self, pipeline):
@@ -48,7 +43,7 @@ class PipelineManager:
             # Check if results is a dict and has 'intent' key
             print(f"Results: {results}")
             if hasattr(results, 'intent'):
-                pipeline_name = INTENT_TO_PIPELINE_MAP[results.intent]
+                pipeline_name = self.pipeline_mapping[results.intent]
                 results = self.run_pipeline(pipeline_name, results)
             return results
         else:
@@ -154,7 +149,6 @@ class PipelineManager:
                     print(f"{add_indent_line(level)}    Routes based on intent:")
                     
                     # Get the routing map from the node's module
-                    from nodes.query_router_node import INTENT_TO_PIPELINE_MAP
                     routing_map = INTENT_TO_PIPELINE_MAP
                     
                     for intent, next_pipeline in routing_map.items():
