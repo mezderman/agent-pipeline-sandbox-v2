@@ -1,6 +1,5 @@
 import json
 from config.enum import IntentType, PipelineName
-from config.pipelines_mapping import INTENT_TO_PIPELINE_MAP
 
 class PipelineManager:
     _instance = None
@@ -24,9 +23,7 @@ class PipelineManager:
         return cls._instance
 
     def register_pipeline(self, pipeline):
-        """
-        Register a pipeline using its name as the key
-        """
+        """Register a pipeline using its name as the key"""
         self.pipelines[pipeline.get_name()] = pipeline
         return self.pipelines
 
@@ -40,7 +37,6 @@ class PipelineManager:
         if pipeline:
             self.save_pipelines_path(pipeline)
             results = pipeline.run(data)
-            # Check if results is a dict and has 'intent' key
             print(f"Results: {results}")
             if hasattr(results, 'intent'):
                 pipeline_name = self.pipeline_mapping[results.intent]
@@ -55,8 +51,6 @@ class PipelineManager:
     
     def get_pipelines_path(self):
         return self.pipelines_path
-    
-    
     
     def get_pipelines_data_logger(self):
         pipeline_logs = []
@@ -91,87 +85,10 @@ class PipelineManager:
             # Handle specific custom objects
             if hasattr(obj, '__dict__'):
                 return obj.__dict__
-            # Add more custom object handling if needed
             try:
                 # Try to convert the object to a dict
                 return vars(obj)
             except:
                 # If all else fails, try string representation
                 return str(obj)
-    
-    # def get_detailed_pipeline_map(self) -> None:
-    #     """
-    #     Generate and print a detailed visual representation of all pipeline connections and nodes
-    #     """
-    #     def add_indent_line(level: int) -> str:
-    #         return "    │" + "    │" * level
-
-    #     def add_branch_line(level: int) -> str:
-    #         return "    ├────" + "    " * level
-
-    #     def add_last_branch_line(level: int) -> str:
-    #         return "    └────" + "    " * level
-
-    #     # Header
-    #     print("\n🗺️  Complete Pipeline Map")
-    #     print("=" * 50)
-
-    #     # Start with query router pipeline as it's the entry point
-    #     entry_pipeline = self.pipelines.get("query-router-pipeline")
-    #     if not entry_pipeline:
-    #         print("\n❌ No query router pipeline found!")
-    #         return
-
-        # def process_pipeline(pipeline_name: str, visited: set, level: int = 0):
-        #     if pipeline_name in visited:
-        #         print(f"{add_branch_line(level)}↩️ Back to {pipeline_name}")
-        #         return
-            
-        #     visited.add(pipeline_name)
-        #     pipeline = self.pipelines.get(pipeline_name)
-            
-        #     if not pipeline:
-        #         print(f"{add_branch_line(level)}❌ Pipeline {pipeline_name} not found!")
-        #         return
-
-        #     # Print pipeline name
-        #     print(f"\n{'    ' * level}📎 Pipeline: {pipeline_name}")
-            
-        #     # Print nodes
-        #     for i, node in enumerate(pipeline.nodes):
-        #         is_last_node = i == len(pipeline.nodes) - 1
-        #         prefix = add_last_branch_line(level) if is_last_node else add_branch_line(level)
-                
-        #         print(f"{prefix}📍 Node: {node.name}")
-                
-        #         # If it's a router node, show and process next pipelines
-        #         if hasattr(node, 'run_next_pipeline'):
-        #             print(f"{add_indent_line(level)}    Routes based on intent:")
-                    
-        #             # Get the routing map from the node's module
-        #             routing_map = INTENT_TO_PIPELINE_MAP
-                    
-        #             for intent, next_pipeline in routing_map.items():
-        #                 print(f"{add_indent_line(level)}    ├── If {intent.value}")
-        #                 print(f"{add_indent_line(level)}    │   └──➤ {next_pipeline.value}")
-                        
-        #                 # Recursively process connected pipelines
-        #                 if next_pipeline.value not in visited:
-        #                     process_pipeline(next_pipeline.value, visited, level + 1)
-
-        # # Start processing from the entry pipeline
-        # process_pipeline("query-router-pipeline", set())
-
-    # def print_help(self):
-    #     """
-    #     Print help information about pipelines and their connections
-    #     """
-    #     print("\n🔍 Pipeline System Help")
-    #     print("=" * 50)
-    #     print("\nAvailable Commands:")
-    #     print("  • help    - Show this help message")
-    #     print("  • list    - List all registered pipelines")
-    #     print("  • run     - Run a pipeline with input data")
-    #     print("\nSystem Structure:")
-    #     self.get_detailed_pipeline_map()
 
