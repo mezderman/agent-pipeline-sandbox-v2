@@ -31,6 +31,7 @@ class Pipeline:
     def run(self, data):
         self.set_input_data(data)
         for node in self.nodes:
+            node.set_input_data(data)
             data = node.process(data)
             self.dataLogger.append(data)
         self.set_output_data(data)

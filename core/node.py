@@ -25,7 +25,6 @@ class Node:
 
     def process(self, data):
         print(f"Processing node: {self.name}")
-        self.set_input_data(data)
         return data
     
     def execute_tools(self, message):
