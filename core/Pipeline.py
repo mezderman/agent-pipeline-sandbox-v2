@@ -33,6 +33,7 @@ class Pipeline:
         for node in self.nodes:
             node.set_input_data(data)
             data = node.process(data)
+            node.set_output_data(data)
             self.dataLogger.append(data)
         self.set_output_data(data)
         return data

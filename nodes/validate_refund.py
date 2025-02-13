@@ -15,5 +15,5 @@ class ValidateRefundNode(Node):
             "validate": "pass"
         }
     
-        self.set_output_data(output_data)
-        return self.get_output_data()
+        # self.set_output_data(output_data)
+        return output_data
