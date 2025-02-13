@@ -11,7 +11,7 @@ def load_message():
     try:
         with open("data/message.json", "r") as f:
             message_data = json.load(f)
-            return message_data  # Return the entire message object
+            return message_data  
     except Exception as e:
         print(f"Error loading message: {e}")
         return None
