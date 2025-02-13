@@ -1,6 +1,12 @@
 import json
 from config.enum import IntentType, PipelineName
 
+#we need to remove this from core
+INTENT_TO_PIPELINE_MAP = {
+    IntentType.REFUND_REQUEST: PipelineName.REFUND,
+    IntentType.OTHER: PipelineName.OTHER
+}
+
 class PipelineManager:
     _instance = None
     
@@ -33,12 +39,18 @@ class PipelineManager:
         """Get a pipeline by name"""
         return self.pipelines.get(name)
     
-    def run_pipeline(self, name, message_data):
+    def run_pipeline(self, name, data):
         """Executes a specified pipeline."""
         pipeline = self.pipelines.get(name)
         if pipeline:
             self.save_pipelines_path(pipeline)
-            return pipeline.run(message_data)
+            results = pipeline.run(data)
+            # Check if results is a dict and has 'intent' key
+            print(f"Results: {results}")
+            if hasattr(results, 'intent'):
+                pipeline_name = INTENT_TO_PIPELINE_MAP[results.intent]
+                results = self.run_pipeline(pipeline_name, results)
+            return results
         else:
             raise ValueError(f"Pipeline {name} not found")
         

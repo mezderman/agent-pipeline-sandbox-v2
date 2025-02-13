@@ -6,10 +6,7 @@ from openai import OpenAI
 from core.pipeline_manager import PipelineManager
 from config.enum import PipelineName, IntentType
 
-INTENT_TO_PIPELINE_MAP = {
-    IntentType.REFUND_REQUEST: PipelineName.REFUND,
-    IntentType.OTHER: PipelineName.OTHER
-}
+
 
 class QueryAnalysis(BaseModel):
     intent: Literal["refund_request", "other"] = Field(
@@ -49,16 +46,16 @@ class QueryRouterNode(Node):
         ]
         analyzed_query = self.completion(self.client, msg)
         
-        self.save_output_data(analyzed_query)
-        pipeline_result = self.run_next_pipeline()
+        # self.save_output_data(analyzed_query)
+        # pipeline_result = self.run_next_pipeline()
 
-        return pipeline_result
+        return analyzed_query
 
-    def run_next_pipeline(self):
-        pipeline_manager = PipelineManager.get_instance()
-        pipeline_name = INTENT_TO_PIPELINE_MAP[self.get_output_data().intent]
-        pipeline_result = pipeline_manager.run_pipeline(pipeline_name, self.get_output_data())
-        return pipeline_result
+    # def run_next_pipeline(self):
+    #     pipeline_manager = PipelineManager.get_instance()
+    #     pipeline_name = INTENT_TO_PIPELINE_MAP[self.get_output_data().intent]
+    #     pipeline_result = pipeline_manager.run_pipeline(pipeline_name, self.get_output_data())
+    #     return pipeline_result
 
     def save_output_data(self, analyzed_query):
         self.set_output_data(analyzed_query)
