@@ -7,7 +7,7 @@ from pipelines.refund_pipeline import RefundPipeline
 from pipelines.other_pipeline import OtherPipeline
 from pipelines.refund_complete_pipeline import RefundCompletePipeline
 from pipelines.human_in_loop_pipeline import HumanInLoopPipeline
-from config.pipelines_mapping import INTENT_TO_PIPELINE_MAP  # Import the mapping
+from config.pipelines_mapping import EVENT_TO_PIPELINE_MAP  # Changed from INTENT_TO_PIPELINE_MAP
 
 def load_message():
     try:
@@ -21,7 +21,7 @@ def load_message():
 
 load_dotenv()
 # Initialize with the mapping
-pipeline_manager = PipelineManager.get_instance(pipeline_mapping=INTENT_TO_PIPELINE_MAP)
+pipeline_manager = PipelineManager.get_instance(pipeline_mapping=EVENT_TO_PIPELINE_MAP)
 message_data = load_message()
 
 # Create pipelines

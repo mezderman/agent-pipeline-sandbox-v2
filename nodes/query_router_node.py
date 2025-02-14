@@ -9,7 +9,7 @@ from config.enum import PipelineName, IntentType
 
 
 class QueryAnalysis(BaseModel):
-    intent: Literal["refund_request", "other"] = Field(
+    event: Literal["refund_request", "other"] = Field(
         ...,
         description="Classification of the query intent: either 'refund_request' or 'other'"
     )

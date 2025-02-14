@@ -12,7 +12,8 @@ class ValidateRefundNode(Node):
         data = {
             **self.get_input_data(),  # Spread existing input data
             "status": "pending",
-            "intent": IntentType.REFUND_FAIL
+            "decision": "refund_not_eligible",
+            "event": IntentType.REFUND_FAIL
         }
     
         return data

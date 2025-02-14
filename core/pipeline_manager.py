@@ -48,16 +48,16 @@ class PipelineManager:
             results = pipeline.run(data)
             print(f"Results: {results}")
             
-            if hasattr(results, 'intent') or (isinstance(results, dict) and 'intent' in results):
-                # Get the intent and remove it from results
-                intent = results.intent if hasattr(results, 'intent') else results['intent']
+            if hasattr(results, 'event') or (isinstance(results, dict) and 'event' in results):
+                # Get the event and remove it from results
+                event = results.event if hasattr(results, 'event') else results['event']
                 if isinstance(results, dict):
-                    results.pop('intent', None)  # Remove intent from dict
-                elif hasattr(results, 'intent'):
-                    delattr(results, 'intent')  # Remove intent from object
+                    results.pop('event', None)  # Remove event from dict
+                elif hasattr(results, 'event'):
+                    delattr(results, 'event')  # Remove event from object
                     
-                if intent in self.pipeline_mapping:
-                    pipeline_name = self.pipeline_mapping[intent]
+                if event in self.pipeline_mapping:
+                    pipeline_name = self.pipeline_mapping[event]
                     results = self.run_pipeline(pipeline_name, results, visited_pipelines)
             return results
         else:
