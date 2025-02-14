@@ -8,10 +8,11 @@ from pipelines.other_pipeline import OtherPipeline
 from pipelines.refund_complete_pipeline import RefundCompletePipeline
 from pipelines.human_in_loop_pipeline import HumanInLoopPipeline
 from config.pipelines_mapping import EVENT_TO_PIPELINE_MAP
+from pipelines.product_pipeline import ProductPipeline
 
 def load_message():
     try:
-        with open("data/message.json", "r") as f:
+        with open("data/message_product_issue.json", "r") as f:
             message_data = json.load(f)
             return message_data  
     except Exception as e:
@@ -30,6 +31,7 @@ refund_pipeline = RefundPipeline(PipelineName.REFUND)
 other_pipeline = OtherPipeline(PipelineName.OTHER)
 refund_complete_pipeline = RefundCompletePipeline(PipelineName.REFUND_COMPLETE)
 human_in_loop_pipeline = HumanInLoopPipeline(PipelineName.HUMAN_IN_LOOP)
+product_pipeline = ProductPipeline(PipelineName.PRODUCT_ISSUE)
 
 # Register pipelines    
 pipeline_manager.register_pipeline(intent_router_pipeline)
@@ -37,6 +39,7 @@ pipeline_manager.register_pipeline(refund_pipeline)
 pipeline_manager.register_pipeline(other_pipeline)  
 pipeline_manager.register_pipeline(refund_complete_pipeline)
 pipeline_manager.register_pipeline(human_in_loop_pipeline)
+pipeline_manager.register_pipeline(product_pipeline)
 
 # Run the pipeline
 final_result = pipeline_manager.run_pipeline(PipelineName.INTENT_ROUTER, message_data)

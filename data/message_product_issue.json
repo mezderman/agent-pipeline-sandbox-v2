@@ -1,0 +1,7 @@
+{
+    "from": "michael.smith@email.com",
+    "customer_id": "CUST-123456",
+    "subject": "Defective Smartwatch – Assistance Needed (Order #ORD-654321)",
+    "message_date": "2024-02-12T10:15:30Z",
+    "body": "Hello,\n\nI recently purchased a smartwatch (Order #ORD-654321) and received it on February 10th. Unfortunately, the screen is unresponsive, and the device won’t charge properly.\n\nI have already tried the following troubleshooting steps:\n- Restarting the watch\n- Using a different charging cable and adapter\n- Performing a factory reset\n\nNone of these steps resolved the issue. I’d appreciate your guidance on how to proceed. Please let me know if you need any further details.\n\nThanks,\nMichael Smith"
+}

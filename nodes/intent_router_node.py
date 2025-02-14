@@ -3,11 +3,19 @@ from typing import Literal
 from pydantic import BaseModel, Field
 from core.node import Node
 from openai import OpenAI
+from config.enum import EventType
 
-class IntentAnalysis(BaseModel):
-    event: Literal["refund_request", "other"] = Field(
+class EventAnalysis(BaseModel):
+    event: EventType = Field(
         ...,
-        description="Classification of the query intent: either 'refund_request' or 'other'"
+        description=f"""Classification of the query intent: 
+        If the query is about a product issue, return '{EventType.PRODUCT_ISSUE}'.
+        If the query is about a refund, return '{EventType.REFUND_REQUEST}'. 
+        If the query is about something else, return '{EventType.OTHER}'."""
+    )
+    intent: str = Field(
+        ...,
+        description=f"""{event}"""
     )
     customer_id: str = Field(
         ...,
@@ -19,7 +27,7 @@ class IntentAnalysis(BaseModel):
     )
     reason: str = Field(
         ...,
-        description="Explanation of why the intent was classified this way"
+        description="Explanation of why the event was classified this way"
     )
 
 class IntentRouterNode(Node):
@@ -27,22 +35,21 @@ class IntentRouterNode(Node):
         super().__init__(name)
         self.client = OpenAI()
 
-        
     def process(self, data):
         super().process(data)
-        msg= [
+        msg = [
             {
-                "role": "developer",
-                "content": """ Analyze the user query and classify its intent."""
+                "role": "system",
+                "content": """You are a customer service assistant. Analyze the user query and classify its intent.
+                Pay special attention to refund requests and related issues."""
             },
             {
                 "role": "user",
                 "content": json.dumps(data)
             }
         ]
-        intent_analysis = self.completion(self.client, msg)
-        return intent_analysis
-
+        event_analysis = self.completion(self.client, msg)
+        return event_analysis
 
     def save_output_data(self, analyzed_query):
         self.set_output_data(analyzed_query)
@@ -51,7 +58,7 @@ class IntentRouterNode(Node):
         completion = client.beta.chat.completions.parse(
             model="gpt-4o-2024-08-06",
             messages=msg,
-            response_format=IntentAnalysis
+            response_format=EventAnalysis
         )
         analyzed_query = completion.choices[0].message.parsed
         return analyzed_query

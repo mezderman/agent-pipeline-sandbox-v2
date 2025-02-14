@@ -5,4 +5,5 @@ EVENT_TO_PIPELINE_MAP = {
     EventType.OTHER: PipelineName.OTHER,
     EventType.REFUND_PASS: PipelineName.REFUND_COMPLETE,
     EventType.REFUND_FAIL: PipelineName.HUMAN_IN_LOOP,
+    EventType.PRODUCT_ISSUE: PipelineName.PRODUCT_ISSUE,
 } 

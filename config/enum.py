@@ -7,6 +7,7 @@ class PipelineName(str, Enum):
     HUMAN_IN_LOOP = "human-in-loop-pipeline"
     REFUND_COMPLETE = "refund-complete-pipeline"
     OTHER = "other-pipeline"
+    PRODUCT_ISSUE = "product-issue-pipeline"
 
 class EventType(str, Enum):
     """Enum for all event types"""
@@ -14,3 +15,4 @@ class EventType(str, Enum):
     REFUND_PASS = "refund_pass"
     REFUND_FAIL = "refund_fail"
     OTHER = "other"
+    PRODUCT_ISSUE = "product_issue"
