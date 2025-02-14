@@ -48,5 +48,3 @@ logs = pipeline_manager.get_pipelines_data_logger_json()
 
 print("\nPipeline Execution Logs:")
 print(logs)
-
-# pipeline_manager.get_detailed_pipeline_map()
