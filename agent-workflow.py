@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import json
 from core.pipeline_manager import PipelineManager
 from config.enum import PipelineName
-from pipelines.router_pipeline import RouterPipeline
+from pipelines.intent_router_pipeline import IntentRouterPipeline
 from pipelines.refund_pipeline import RefundPipeline
 from pipelines.other_pipeline import OtherPipeline
 from pipelines.refund_complete_pipeline import RefundCompletePipeline
@@ -25,21 +25,21 @@ pipeline_manager = PipelineManager.get_instance(pipeline_mapping=EVENT_TO_PIPELI
 message_data = load_message()
 
 # Create pipelines
-other_pipeline = OtherPipeline(PipelineName.OTHER)
+intent_router_pipeline = IntentRouterPipeline(PipelineName.INTENT_ROUTER)
 refund_pipeline = RefundPipeline(PipelineName.REFUND)
-router_pipeline = RouterPipeline(PipelineName.ROUTER)
+other_pipeline = OtherPipeline(PipelineName.OTHER)
 refund_complete_pipeline = RefundCompletePipeline(PipelineName.REFUND_COMPLETE)
 human_in_loop_pipeline = HumanInLoopPipeline(PipelineName.HUMAN_IN_LOOP)
 
 # Register pipelines    
-pipeline_manager.register_pipeline(router_pipeline)
+pipeline_manager.register_pipeline(intent_router_pipeline)
 pipeline_manager.register_pipeline(refund_pipeline)
 pipeline_manager.register_pipeline(other_pipeline)  
 pipeline_manager.register_pipeline(refund_complete_pipeline)
 pipeline_manager.register_pipeline(human_in_loop_pipeline)
 
 # Run the pipeline
-final_result = pipeline_manager.run_pipeline("query-router-pipeline", message_data)
+final_result = pipeline_manager.run_pipeline(PipelineName.INTENT_ROUTER, message_data)
 
 print("\nFinal Result:\n", final_result)
 

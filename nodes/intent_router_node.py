@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from core.node import Node
 from openai import OpenAI
 
-class QueryAnalysis(BaseModel):
+class IntentAnalysis(BaseModel):
     event: Literal["refund_request", "other"] = Field(
         ...,
         description="Classification of the query intent: either 'refund_request' or 'other'"
@@ -22,7 +22,7 @@ class QueryAnalysis(BaseModel):
         description="Explanation of why the intent was classified this way"
     )
 
-class QueryRouterNode(Node):
+class IntentRouterNode(Node):
     def __init__(self, name):
         super().__init__(name)
         self.client = OpenAI()
@@ -40,8 +40,8 @@ class QueryRouterNode(Node):
                 "content": json.dumps(data)
             }
         ]
-        analyzed_query = self.completion(self.client, msg)
-        return analyzed_query
+        intent_analysis = self.completion(self.client, msg)
+        return intent_analysis
 
 
     def save_output_data(self, analyzed_query):
@@ -51,7 +51,7 @@ class QueryRouterNode(Node):
         completion = client.beta.chat.completions.parse(
             model="gpt-4o-2024-08-06",
             messages=msg,
-            response_format=QueryAnalysis
+            response_format=IntentAnalysis
         )
         analyzed_query = completion.choices[0].message.parsed
         return analyzed_query
