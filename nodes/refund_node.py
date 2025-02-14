@@ -52,7 +52,7 @@ class RefundNode(Node):
             "status": "completed",
             "decision": final_decision.decision,
             "reason": final_decision.reason,
-            "steps": final_decision.steps
+            "agents_steps": final_decision.agents_steps
         }
 
         return output_data
