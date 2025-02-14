@@ -7,8 +7,8 @@ class OtherNode(Node):
     def process(self, data):
         print("Processing other request...")
         super().process(data)
-        self.set_output_data({
+        data = {
             "status": "completed",
             "type": "other"
-        })
-        return self.get_output_data()
+        }
+        return data

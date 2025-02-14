@@ -31,16 +31,34 @@ class PipelineManager:
         """Get a pipeline by name"""
         return self.pipelines.get(name)
     
-    def run_pipeline(self, name, data):
+    def run_pipeline(self, name, data, visited_pipelines=None):
         """Executes a specified pipeline."""
+        if visited_pipelines is None:
+            visited_pipelines = set()
+            
+        if name in visited_pipelines:
+            print(f"Warning: Detected pipeline loop at {name}, stopping recursion")
+            return data
+            
+        visited_pipelines.add(name)
+        
         pipeline = self.pipelines.get(name)
         if pipeline:
             self.save_pipelines_path(pipeline)
             results = pipeline.run(data)
             print(f"Results: {results}")
-            if hasattr(results, 'intent'):
-                pipeline_name = self.pipeline_mapping[results.intent]
-                results = self.run_pipeline(pipeline_name, results)
+            
+            if hasattr(results, 'intent') or (isinstance(results, dict) and 'intent' in results):
+                # Get the intent and remove it from results
+                intent = results.intent if hasattr(results, 'intent') else results['intent']
+                if isinstance(results, dict):
+                    results.pop('intent', None)  # Remove intent from dict
+                elif hasattr(results, 'intent'):
+                    delattr(results, 'intent')  # Remove intent from object
+                    
+                if intent in self.pipeline_mapping:
+                    pipeline_name = self.pipeline_mapping[intent]
+                    results = self.run_pipeline(pipeline_name, results, visited_pipelines)
             return results
         else:
             raise ValueError(f"Pipeline {name} not found")

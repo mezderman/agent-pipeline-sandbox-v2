@@ -5,6 +5,8 @@ from config.enum import PipelineName
 from pipelines.router_pipeline import RouterPipeline
 from pipelines.refund_pipeline import RefundPipeline
 from pipelines.other_pipeline import OtherPipeline
+from pipelines.refund_complete_pipeline import RefundCompletePipeline
+from pipelines.human_in_loop_pipeline import HumanInLoopPipeline
 from config.pipelines_mapping import INTENT_TO_PIPELINE_MAP  # Import the mapping
 
 def load_message():
@@ -26,11 +28,15 @@ message_data = load_message()
 other_pipeline = OtherPipeline(PipelineName.OTHER)
 refund_pipeline = RefundPipeline(PipelineName.REFUND)
 router_pipeline = RouterPipeline(PipelineName.ROUTER)
+refund_complete_pipeline = RefundCompletePipeline(PipelineName.REFUND_COMPLETE)
+human_in_loop_pipeline = HumanInLoopPipeline(PipelineName.HUMAN_IN_LOOP)
 
 # Register pipelines    
 pipeline_manager.register_pipeline(router_pipeline)
 pipeline_manager.register_pipeline(refund_pipeline)
 pipeline_manager.register_pipeline(other_pipeline)  
+pipeline_manager.register_pipeline(refund_complete_pipeline)
+pipeline_manager.register_pipeline(human_in_loop_pipeline)
 
 # Run the pipeline
 final_result = pipeline_manager.run_pipeline("query-router-pipeline", message_data)

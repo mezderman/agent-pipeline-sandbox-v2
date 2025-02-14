@@ -1,6 +1,6 @@
 from core.node import Node
 from openai import OpenAI
-
+from config.enum import IntentType
 class ValidateRefundNode(Node):
     def __init__(self, name):
         self.name = name
@@ -9,11 +9,10 @@ class ValidateRefundNode(Node):
     def process(self, data):
         print("Validating refund request...")
         super().process(data)
-        output_data = {
+        data = {
             **self.get_input_data(),  # Spread existing input data
-            "status": "completed",
-            "validate": "pass"
+            "status": "pending",
+            "intent": IntentType.REFUND_FAIL
         }
     
-        # self.set_output_data(output_data)
-        return output_data
+        return data
