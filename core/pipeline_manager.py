@@ -1,5 +1,4 @@
 import json
-from config.enum import IntentType, PipelineName
 
 class PipelineManager:
     _instance = None

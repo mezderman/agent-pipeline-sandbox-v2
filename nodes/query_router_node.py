@@ -3,10 +3,6 @@ from typing import Literal
 from pydantic import BaseModel, Field
 from core.node import Node
 from openai import OpenAI
-from core.pipeline_manager import PipelineManager
-from config.enum import PipelineName, IntentType
-
-
 
 class QueryAnalysis(BaseModel):
     event: Literal["refund_request", "other"] = Field(

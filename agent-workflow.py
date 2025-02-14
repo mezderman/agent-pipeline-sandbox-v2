@@ -7,7 +7,7 @@ from pipelines.refund_pipeline import RefundPipeline
 from pipelines.other_pipeline import OtherPipeline
 from pipelines.refund_complete_pipeline import RefundCompletePipeline
 from pipelines.human_in_loop_pipeline import HumanInLoopPipeline
-from config.pipelines_mapping import EVENT_TO_PIPELINE_MAP  # Changed from INTENT_TO_PIPELINE_MAP
+from config.pipelines_mapping import EVENT_TO_PIPELINE_MAP
 
 def load_message():
     try:

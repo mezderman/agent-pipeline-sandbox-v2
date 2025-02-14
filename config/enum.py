@@ -8,9 +8,9 @@ class PipelineName(str, Enum):
     REFUND_COMPLETE = "refund-complete-pipeline"
     OTHER = "other-pipeline"
 
-class IntentType(str, Enum):
-    """Enum for all intent types"""
-    REFUND_REQUEST = "refund_request",
-    REFUND_PASS = "refund_pass",
-    REFUND_FAIL = "refund_fail",
+class EventType(str, Enum):
+    """Enum for all event types"""
+    REFUND_REQUEST = "refund_request"
+    REFUND_PASS = "refund_pass"
+    REFUND_FAIL = "refund_fail"
     OTHER = "other"

@@ -1,8 +1,8 @@
-from config.enum import IntentType, PipelineName
+from config.enum import EventType, PipelineName
 
 EVENT_TO_PIPELINE_MAP = {
-    IntentType.REFUND_REQUEST: PipelineName.REFUND,
-    IntentType.OTHER: PipelineName.OTHER,
-    IntentType.REFUND_PASS: PipelineName.REFUND_COMPLETE,
-    IntentType.REFUND_FAIL: PipelineName.HUMAN_IN_LOOP,
+    EventType.REFUND_REQUEST: PipelineName.REFUND,
+    EventType.OTHER: PipelineName.OTHER,
+    EventType.REFUND_PASS: PipelineName.REFUND_COMPLETE,
+    EventType.REFUND_FAIL: PipelineName.HUMAN_IN_LOOP,
 } 
