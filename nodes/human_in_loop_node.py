@@ -12,6 +12,6 @@ class HumanInLoopNode(Node):
         # Create result with human in loop status
         result_data = {
             **data,  # Spread input data
-            "status": "human in loop"
+            "status": "human_in_loop"
         }
         return result_data
