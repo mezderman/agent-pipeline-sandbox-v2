@@ -17,7 +17,7 @@ class FinalDecision(BaseModel):
         ...,
         description="Explanation of why the decision was made"
     )
-    steps: List[str] = Field(
+    agents_steps: List[str] = Field(
         ...,
         description="Steps you took to resolve the refund request"
     )
@@ -46,22 +46,30 @@ class RefundNode(Node):
         final_decision_completion = self.final_decision(self.client, messages)
         final_decision = final_decision_completion.choices[0].message.parsed
        
-        self.set_output_data({
+       
+        output_data = {
+            **data,  # Spread existing input data
             "status": "completed",
             "decision": final_decision.decision,
             "reason": final_decision.reason,
             "steps": final_decision.steps
-        })
+        }
 
-        return self.get_output_data()
+        return output_data
     
     def plan_resolution(self, client: OpenAI):
+        input_data = self.get_input_data()
         msg = [{
             "role": "developer",
-            "content": f""" Analyze the user refund request.
+            "content": f""" Analyze the user refund request:
+                        Customer ID: {input_data['customer_id']}
+                        Order ID: {input_data['order_id']}
+                        Subject: {input_data['subject']}
+                        Body: {input_data['body']} 
+                        Message Date: {input_data['message_date']}
+                        From Email: {input_data['from_email']}
+
                         Try to resolve the user request using the tools provided.generate step by step plan to resolve the request
-                        Customer ID: {self.get_input_data().customer_id}
-                        Order ID: {self.get_input_data().order_id}
                     """
         }]
 

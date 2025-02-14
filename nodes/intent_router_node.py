@@ -17,6 +17,22 @@ class EventAnalysis(BaseModel):
         ...,
         description=f"""{event}"""
     )
+    from_email: str = Field(
+        ...,
+        description="From email"
+    )
+    subject: str = Field(
+        ...,
+        description="Subject"
+    )
+    message_date: str = Field(
+        ...,
+        description="Message date"
+    )
+    body: str = Field(
+        ...,
+        description="Body"
+    )
     customer_id: str = Field(
         ...,
         description="Customer ID"
@@ -61,7 +77,7 @@ class IntentRouterNode(Node):
             response_format=EventAnalysis
         )
         analyzed_query = completion.choices[0].message.parsed
-        return analyzed_query
+        return analyzed_query.model_dump(mode='json')
 
 
    

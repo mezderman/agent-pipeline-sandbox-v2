@@ -9,11 +9,11 @@ class ValidateRefundNode(Node):
     def process(self, data):
         print("Validating refund request...")
         super().process(data)
-        data = {
-            **self.get_input_data(),  # Spread existing input data
+        output_data = {
+            **data,  # Spread existing input data
             "status": "pending",
             "decision": "refund_not_eligible",
             "event": EventType.REFUND_FAIL
         }
     
-        return data
+        return output_data
