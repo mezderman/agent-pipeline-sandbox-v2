@@ -1,6 +1,6 @@
-from core.node import Node
+from core.task import Task
 
-class OtherNode(Node):
+class OtherNode(Task):
     def __init__(self, name):
         self.name = name
         

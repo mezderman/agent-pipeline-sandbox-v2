@@ -1,4 +1,4 @@
-from core.node import Node
+from core.task import Task
 from openai import OpenAI
 from tools.product_manual_rag import get_product_manual
 from tools.product_manual_schema import product_manual_tools
@@ -15,7 +15,7 @@ class FinalDecision(BaseModel):
         description="Steps you took to resolve the product issue"
     )
 
-class ProductNode(Node):
+class ProductNode(Task):
     def __init__(self, name):
         self.name = name
         self.client = OpenAI()

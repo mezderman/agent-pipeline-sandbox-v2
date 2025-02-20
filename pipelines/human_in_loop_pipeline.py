@@ -1,7 +1,7 @@
-from core.pipeline import Pipeline
+from core.agent import Agent
 from nodes.human_in_loop_node import HumanInLoopNode
 
-class HumanInLoopPipeline(Pipeline):
+class HumanInLoopPipeline(Agent):
     def __init__(self, name):
         super().__init__(name)
         

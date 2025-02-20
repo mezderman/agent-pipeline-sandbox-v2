@@ -1,8 +1,8 @@
-from core.pipeline import Pipeline
+from core.agent import Agent
 from nodes.refund_node import RefundNode
 from nodes.validate_refund import ValidateRefundNode
 
-class RefundPipeline(Pipeline):
+class RefundPipeline(Agent):
     def __init__(self, name):
         super().__init__(name)
         

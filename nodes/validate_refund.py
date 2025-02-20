@@ -1,7 +1,7 @@
-from core.node import Node
+from core.task import Task
 from openai import OpenAI
 from config.enum import EventType
-class ValidateRefundNode(Node):
+class ValidateRefundNode(Task):
     def __init__(self, name):
         self.name = name
         self.client = OpenAI()

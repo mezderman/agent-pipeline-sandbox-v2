@@ -1,4 +1,4 @@
-from core.node import Node
+from core.task import Task
 from openai import OpenAI
 from tools.refund_policy import get_refund_policy
 from tools.transaction_details import get_transaction_details
@@ -22,7 +22,7 @@ class FinalDecision(BaseModel):
         description="Steps you took to resolve the refund request"
     )
 
-class RefundNode(Node):
+class RefundNode(Task):
     def __init__(self, name):
         self.name = name
         self.client = OpenAI()

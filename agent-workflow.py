@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import json
-from core.pipeline_manager import PipelineManager
+from core.agent_manager import AgentManager
 from config.enum import PipelineName
 from pipelines.intent_router_pipeline import IntentRouterPipeline
 from pipelines.refund_pipeline import RefundPipeline
@@ -22,7 +22,7 @@ def load_message():
 
 load_dotenv()
 # Initialize with the mapping
-pipeline_manager = PipelineManager.get_instance(pipeline_mapping=EVENT_TO_PIPELINE_MAP)
+pipeline_manager = AgentManager.get_instance(pipeline_mapping=EVENT_TO_PIPELINE_MAP)
 message_data = load_message()
 
 # Create pipelines

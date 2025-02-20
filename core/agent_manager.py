@@ -1,11 +1,11 @@
 import json
 
-class PipelineManager:
+class AgentManager:
     _instance = None
     
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
-            cls._instance = super(PipelineManager, cls).__new__(cls)
+            cls._instance = super(AgentManager, cls).__new__(cls)
         return cls._instance
 
     def __init__(self, pipeline_mapping=None):

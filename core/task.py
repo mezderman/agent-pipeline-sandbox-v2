@@ -1,7 +1,7 @@
 import json
 from core.tool_registry import ToolRegistry
 
-class Node:
+class Task:
     def __init__(self, name):
 
         self.name = name

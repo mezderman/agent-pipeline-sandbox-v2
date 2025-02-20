@@ -1,7 +1,7 @@
-from core.pipeline import Pipeline
+from core.agent import Agent
 from nodes.product_node import ProductNode
 
-class ProductPipeline(Pipeline):
+class ProductPipeline(Agent):
     def __init__(self, name):
         super().__init__(name)
         

@@ -1,4 +1,4 @@
-class Pipeline:
+class Agent:
     def __init__(self, name):
         """Initialize an empty pipeline."""
         self.nodes = []

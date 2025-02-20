@@ -1,7 +1,7 @@
 import json
 from typing import Literal
 from pydantic import BaseModel, Field
-from core.node import Node
+from core.task import Task
 from openai import OpenAI
 from config.enum import EventType
 
@@ -46,7 +46,7 @@ class EventAnalysis(BaseModel):
         description="Explanation of why the event was classified this way"
     )
 
-class IntentRouterNode(Node):
+class IntentRouterNode(Task):
     def __init__(self, name):
         super().__init__(name)
         self.client = OpenAI()
