@@ -1,6 +1,6 @@
 from core.agent import Agent
-from nodes.refund_node import RefundNode
-from nodes.validate_refund import ValidateRefundNode
+from tasks.refund_node import RefundNode
+from tasks.validate_refund import ValidateRefundNode
 
 class RefundPipeline(Agent):
     def __init__(self, name):

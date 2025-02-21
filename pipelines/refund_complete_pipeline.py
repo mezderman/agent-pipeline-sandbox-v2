@@ -1,5 +1,5 @@
 from core.agent import Agent
-from nodes.refund_complete_node import RefundCompleteNode
+from tasks.refund_complete_node import RefundCompleteNode
 
 
 class RefundCompletePipeline(Agent):
