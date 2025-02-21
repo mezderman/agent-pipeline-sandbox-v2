@@ -1,6 +1,6 @@
 from config.enum import EventType, PipelineName
 
-EVENT_TO_PIPELINE_MAP = {
+EVENT_TO_AGENT_MAP = {
     EventType.REFUND_REQUEST: PipelineName.REFUND,
     EventType.OTHER: PipelineName.OTHER,
     EventType.REFUND_PASS: PipelineName.REFUND_COMPLETE,

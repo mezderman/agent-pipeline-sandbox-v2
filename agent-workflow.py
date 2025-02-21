@@ -7,7 +7,7 @@ from pipelines.refund_pipeline import RefundPipeline
 from pipelines.other_pipeline import OtherPipeline
 from pipelines.refund_complete_pipeline import RefundCompletePipeline
 from pipelines.human_in_loop_pipeline import HumanInLoopPipeline
-from config.pipelines_mapping import EVENT_TO_PIPELINE_MAP
+from config.agents_mapping import EVENT_TO_AGENT_MAP
 from pipelines.product_pipeline import ProductPipeline
 
 def load_message():
@@ -22,7 +22,7 @@ def load_message():
 
 load_dotenv()
 # Initialize with the mapping
-pipeline_manager = AgentManager.get_instance(pipeline_mapping=EVENT_TO_PIPELINE_MAP)
+pipeline_manager = AgentManager.get_instance(agent_mapping=EVENT_TO_AGENT_MAP)
 message_data = load_message()
 
 # Create pipelines

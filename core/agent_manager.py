@@ -8,40 +8,40 @@ class AgentManager:
             cls._instance = super(AgentManager, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self, pipeline_mapping=None):
+    def __init__(self, agent_mapping=None):
         if not hasattr(self, 'initialized'):
-            self.pipelines = {}
+            self.agents = {}
             self.initialized = True
-            self.pipelines_path = []
-            self.pipeline_mapping = pipeline_mapping
+            self.agents_path = []
+            self.agent_mapping = agent_mapping
 
     @classmethod
-    def get_instance(cls, pipeline_mapping=None):
+    def get_instance(cls, agent_mapping=None):
         if cls._instance is None:
-            cls._instance = cls(pipeline_mapping=pipeline_mapping)
+            cls._instance = cls(agent_mapping=agent_mapping)
         return cls._instance
 
     def register_agent(self, pipeline):
         """Register a pipeline using its name as the key"""
-        self.pipelines[pipeline.get_name()] = pipeline
-        return self.pipelines
+        self.agents[pipeline.get_name()] = pipeline
+        return self.agents
 
     def get_agent(self, name):
         """Get a pipeline by name"""
-        return self.pipelines.get(name)
+        return self.agents.get(name)
     
-    def run_agent(self, name, data, visited_pipelines=None):
+    def run_agent(self, name, data, visited_agents=None):
         """Executes a specified pipeline."""
-        if visited_pipelines is None:
-            visited_pipelines = set()
+        if visited_agents is None:
+            visited_agents = set()
             
-        if name in visited_pipelines:
+        if name in visited_agents:
             print(f"Warning: Detected pipeline loop at {name}, stopping recursion")
             return data
             
-        visited_pipelines.add(name)
+        visited_agents.add(name)
         
-        pipeline = self.pipelines.get(name)
+        pipeline = self.agents.get(name)
         if pipeline:
             self.save_agent_path(pipeline)
             results = pipeline.run(data)
@@ -55,24 +55,24 @@ class AgentManager:
                 elif hasattr(results, 'event'):
                     delattr(results, 'event')  # Remove event from object
                     
-                if event in self.pipeline_mapping:
-                    pipeline_name = self.pipeline_mapping[event]
-                    results = self.run_agent(pipeline_name, results, visited_pipelines)
+                if event in self.agent_mapping:
+                    pipeline_name = self.agent_mapping[event]
+                    results = self.run_agent(pipeline_name, results, visited_agents)
             return results
         else:
             raise ValueError(f"Pipeline {name} not found")
         
     def save_agent_path(self, pipeline):
-        self.pipelines_path.append(pipeline)
-        return self.pipelines_path
+        self.agents_path.append(pipeline)
+        return self.agents_path
     
     def get_agents_path(self):
-        return self.pipelines_path
+        return self.agents_path
     
     def get_agents_data_logger(self):
         pipeline_logs = []
         
-        for pipeline in self.pipelines_path:
+        for pipeline in self.agents_path:
             pipeline_data = {
                 "pipeline_name": pipeline.get_name(),
                 "nodes_data": []
@@ -87,7 +87,7 @@ class AgentManager:
                     }
                     pipeline_data["nodes_data"].append(node_data)
             
-            if pipeline_data["nodes_data"]:  # Only add pipelines that have nodes with data
+            if pipeline_data["nodes_data"]:  # Only add agents that have nodes with data
                 pipeline_logs.append(pipeline_data)
         
         return pipeline_logs
