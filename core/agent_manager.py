@@ -21,7 +21,7 @@ class AgentManager:
             cls._instance = cls(pipeline_mapping=pipeline_mapping)
         return cls._instance
 
-    def register_pipeline(self, pipeline):
+    def register_agent(self, pipeline):
         """Register a pipeline using its name as the key"""
         self.pipelines[pipeline.get_name()] = pipeline
         return self.pipelines

@@ -34,12 +34,12 @@ human_in_loop_pipeline = HumanInLoopPipeline(PipelineName.HUMAN_IN_LOOP)
 product_pipeline = ProductPipeline(PipelineName.PRODUCT_ISSUE)
 
 # Register pipelines    
-pipeline_manager.register_pipeline(intent_router_pipeline)
-pipeline_manager.register_pipeline(refund_pipeline)
-pipeline_manager.register_pipeline(other_pipeline)  
-pipeline_manager.register_pipeline(refund_complete_pipeline)
-pipeline_manager.register_pipeline(human_in_loop_pipeline)
-pipeline_manager.register_pipeline(product_pipeline)
+pipeline_manager.register_agent(intent_router_pipeline)
+pipeline_manager.register_agent(refund_pipeline)
+pipeline_manager.register_agent(other_pipeline)  
+pipeline_manager.register_agent(refund_complete_pipeline)
+pipeline_manager.register_agent(human_in_loop_pipeline)
+pipeline_manager.register_agent(product_pipeline)
 
 # Run the pipeline
 final_result = pipeline_manager.run_pipeline(PipelineName.INTENT_ROUTER, message_data)
