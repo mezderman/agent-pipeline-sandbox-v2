@@ -13,7 +13,7 @@ from config.agents_mapping import EVENT_TO_AGENT_MAP
 
 def load_message():
     try:
-        with open("data/message_product_issue.json", "r") as f:
+        with open("data/message_refund.json", "r") as f:
             message_data = json.load(f)
             return message_data  
     except Exception as e:
@@ -50,5 +50,5 @@ print("\nFinal Result:\n", final_result)
 # After running the agent
 logs = agent_manager.get_agents_data_logger_json()
 
-print("\Agent Execution Logs:")
+print("Agent Execution Logs:")
 print(logs)

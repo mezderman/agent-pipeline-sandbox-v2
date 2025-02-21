@@ -2,11 +2,10 @@ from core.task import Task
 from openai import OpenAI
 from tools.refund_policy import get_refund_policy
 from tools.transaction_details import get_transaction_details
-from tools.tool_schemas import tools
 import json
 from typing import Literal, List
 from pydantic import BaseModel, Field
-from core.tool_registry import ToolRegistry
+from core.utils import function_to_json
 
 class FinalDecision(BaseModel):
     decision: Literal["refund_eligible", "refund_not_eligible"] = Field(
@@ -32,6 +31,9 @@ class RefundTask(Task):
             "get_refund_policy": get_refund_policy,
             "get_transaction_details": get_transaction_details
         })
+
+        self.tools = [function_to_json(f) for f in [get_refund_policy, get_transaction_details]]
+        
 
     def process(self, data):
         print("Processing refund request...")
@@ -76,7 +78,7 @@ class RefundTask(Task):
         completion = client.chat.completions.create(
             model="gpt-4o-2024-08-06",
             messages=msg,
-            tools=tools
+            tools=self.tools
         )
         
         return completion
