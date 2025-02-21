@@ -1,9 +1,9 @@
 from core.task import Task
 from openai import OpenAI
 from tools.product_manual_rag import get_product_manual
-from tools.product_manual_schema import product_manual_tools
 from pydantic import BaseModel, Field
 from typing import List
+from core.utils import function_to_json
 
 class FinalDecision(BaseModel):
     response: str = Field(
@@ -24,6 +24,7 @@ class ProductTask(Task):
         self.register_tools({
             "get_product_manual": get_product_manual
         })
+        self.tools = [function_to_json(f) for f in [get_product_manual]]
 
     def process(self, data):
         print("Processing product request...")
@@ -71,7 +72,7 @@ class ProductTask(Task):
         completion = client.chat.completions.create(
             model="gpt-4-0125-preview",
             messages=msg,
-            tools=product_manual_tools
+            tools=self.tools
         )
         
         return completion 

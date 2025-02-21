@@ -13,7 +13,7 @@ from config.agents_mapping import EVENT_TO_AGENT_MAP
 
 def load_message():
     try:
-        with open("data/message_refund.json", "r") as f:
+        with open("data/message_product_issue.json", "r") as f:
             message_data = json.load(f)
             return message_data  
     except Exception as e:
