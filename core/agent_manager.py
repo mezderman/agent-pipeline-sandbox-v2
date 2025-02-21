@@ -75,19 +75,19 @@ class AgentManager:
         for agent in self.agents_path:
             agent_data = {
                 "agent_name": agent.get_name(),
-                "nodes_data": []
+                "tasks_data": []
             }
             
-            for node in agent.tasks:
-                node_output = node.get_output_data() if hasattr(node, 'get_output_data') else None
-                if node_output:  # Only add nodes that have data
-                    node_data = {
-                        "node_name": node.get_name(),
-                        "output_data": node_output
+            for task in agent.tasks:
+                task_output = task.get_output_data() if hasattr(task, 'get_output_data') else None
+                if task_output:  # Only add tasks that have data
+                    task_data = {
+                        "task_name": task.get_name(),
+                        "output_data": task_output
                     }
-                    agent_data["nodes_data"].append(node_data)
+                    agent_data["tasks_data"].append(task_data)
             
-            if agent_data["nodes_data"]:  # Only add agents that have nodes with data
+            if agent_data["tasks_data"]:  # Only add agents that have nodes with data
                 agent_logs.append(agent_data)
         
         return agent_logs
