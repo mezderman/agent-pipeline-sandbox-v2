@@ -2,12 +2,12 @@ from dotenv import load_dotenv
 import json
 from core.agent_manager import AgentManager
 from config.enum import AgentName
-from agents.intent_router_pipeline import IntentRouterPipeline
-from agents.refund_pipeline import RefundPipeline
-from agents.other_pipeline import OtherPipeline
-from agents.refund_complete_pipeline import RefundCompletePipeline
-from agents.product_pipeline import ProductPipeline
-from agents.human_in_loop_pipeline import HumanInLoopPipeline
+from agents.intent_router_agent import IntentRouterAgent
+from agents.refund_agent import RefundAgent
+from agents.other_agent import OtherAgent
+from agents.refund_complete_agent import RefundCompleteAgent
+from agents.product_agent import ProductAgent
+from agents.human_in_loop_agent import HumanInLoopAgent
 from config.agents_mapping import EVENT_TO_AGENT_MAP
 
 
@@ -27,12 +27,12 @@ pipeline_manager = AgentManager.get_instance(agent_mapping=EVENT_TO_AGENT_MAP)
 message_data = load_message()
 
 # Create pipelines
-intent_router_pipeline = IntentRouterPipeline(AgentName.INTENT_ROUTER)
-refund_pipeline = RefundPipeline(AgentName.REFUND)
-other_pipeline = OtherPipeline(AgentName.OTHER)
-refund_complete_pipeline = RefundCompletePipeline(AgentName.REFUND_COMPLETE)
-human_in_loop_pipeline = HumanInLoopPipeline(AgentName.HUMAN_IN_LOOP)
-product_pipeline = ProductPipeline(AgentName.PRODUCT_ISSUE)
+intent_router_pipeline = IntentRouterAgent(AgentName.INTENT_ROUTER)
+refund_pipeline = RefundAgent(AgentName.REFUND)
+other_pipeline = OtherAgent(AgentName.OTHER)
+refund_complete_pipeline = RefundCompleteAgent(AgentName.REFUND_COMPLETE)
+human_in_loop_pipeline = HumanInLoopAgent(AgentName.HUMAN_IN_LOOP)
+product_pipeline = ProductAgent(AgentName.PRODUCT_ISSUE)
 
 # Register pipelines    
 pipeline_manager.register_agent(intent_router_pipeline)

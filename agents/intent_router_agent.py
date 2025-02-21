@@ -1,7 +1,7 @@
 from core.agent import Agent
 from tasks.intent_router_node import IntentRouterNode
 
-class IntentRouterPipeline(Agent):
+class IntentRouterAgent(Agent):
     def __init__(self, name):
         super().__init__(name)
         

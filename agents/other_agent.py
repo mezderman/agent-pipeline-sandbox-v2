@@ -1,7 +1,7 @@
 from core.agent import Agent
 from tasks.other_node import OtherNode
 
-class OtherPipeline(Agent):
+class OtherAgent(Agent):
     def __init__(self, name):
         super().__init__(name)
         
