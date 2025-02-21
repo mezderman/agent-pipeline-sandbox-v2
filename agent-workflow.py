@@ -2,13 +2,14 @@ from dotenv import load_dotenv
 import json
 from core.agent_manager import AgentManager
 from config.enum import AgentName
-from pipelines.intent_router_pipeline import IntentRouterPipeline
-from pipelines.refund_pipeline import RefundPipeline
-from pipelines.other_pipeline import OtherPipeline
-from pipelines.refund_complete_pipeline import RefundCompletePipeline
-from pipelines.human_in_loop_pipeline import HumanInLoopPipeline
+from agents.intent_router_pipeline import IntentRouterPipeline
+from agents.refund_pipeline import RefundPipeline
+from agents.other_pipeline import OtherPipeline
+from agents.refund_complete_pipeline import RefundCompletePipeline
+from agents.product_pipeline import ProductPipeline
+from agents.human_in_loop_pipeline import HumanInLoopPipeline
 from config.agents_mapping import EVENT_TO_AGENT_MAP
-from pipelines.product_pipeline import ProductPipeline
+
 
 def load_message():
     try:
