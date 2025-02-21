@@ -1,7 +1,7 @@
 class Agent:
     def __init__(self, name):
         """Initialize an empty pipeline."""
-        self.nodes = []
+        self.tasks = []
         self.dataLogger = []
         self.name = name
         self.inputData = []
@@ -10,8 +10,8 @@ class Agent:
     def get_name(self):
         return self.name
 
-    def add_node(self, node):
-        self.nodes.append(node)
+    def add_task(self, node):
+        self.tasks.append(node)
     
     def get_data_logger(self):
         return self.dataLogger
@@ -30,7 +30,7 @@ class Agent:
 
     def run(self, data):
         self.set_input_data(data)
-        for node in self.nodes:
+        for node in self.tasks:
             node.set_input_data(data)
             data = node.process(data)
             node.set_output_data(data)

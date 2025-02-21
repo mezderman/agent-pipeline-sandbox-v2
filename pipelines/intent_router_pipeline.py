@@ -5,4 +5,4 @@ class IntentRouterPipeline(Agent):
     def __init__(self, name):
         super().__init__(name)
         
-        self.add_node(IntentRouterNode("intent-router-node"))
+        self.add_task(IntentRouterNode("intent-router-node"))

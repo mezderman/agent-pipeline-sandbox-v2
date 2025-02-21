@@ -5,4 +5,4 @@ class HumanInLoopPipeline(Agent):
     def __init__(self, name):
         super().__init__(name)
         
-        self.add_node(HumanInLoopNode("human-in-loop-node"))
+        self.add_task(HumanInLoopNode("human-in-loop-node"))

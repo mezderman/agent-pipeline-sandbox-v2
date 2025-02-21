@@ -5,4 +5,4 @@ class ProductPipeline(Agent):
     def __init__(self, name):
         super().__init__(name)
         
-        self.add_node(ProductNode("product-node")) 
+        self.add_task(ProductNode("product-node")) 

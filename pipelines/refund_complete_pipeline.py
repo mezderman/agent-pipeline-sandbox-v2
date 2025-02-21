@@ -6,4 +6,4 @@ class RefundCompletePipeline(Agent):
     def __init__(self, name):
         super().__init__(name)
         
-        self.add_node(RefundCompleteNode("refund-complete-node"))
+        self.add_task(RefundCompleteNode("refund-complete-node"))

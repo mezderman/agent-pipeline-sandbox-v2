@@ -5,4 +5,4 @@ class OtherPipeline(Agent):
     def __init__(self, name):
         super().__init__(name)
         
-        self.add_node(OtherNode("other-node"))
+        self.add_task(OtherNode("other-node"))

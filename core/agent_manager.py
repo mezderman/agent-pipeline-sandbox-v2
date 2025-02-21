@@ -78,7 +78,7 @@ class AgentManager:
                 "nodes_data": []
             }
             
-            for node in agent.nodes:
+            for node in agent.tasks:
                 node_output = node.get_output_data() if hasattr(node, 'get_output_data') else None
                 if node_output:  # Only add nodes that have data
                     node_data = {
