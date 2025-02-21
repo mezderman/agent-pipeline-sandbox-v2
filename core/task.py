@@ -24,7 +24,7 @@ class Task:
         self.outputData = data
 
     def process(self, data):
-        print(f"Processing node: {self.name}")
+        print(f"Processing task: {self.name}")
         return data
     
     def execute_tools(self, message):

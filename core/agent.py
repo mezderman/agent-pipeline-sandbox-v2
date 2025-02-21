@@ -30,10 +30,10 @@ class Agent:
 
     def run(self, data):
         self.set_input_data(data)
-        for node in self.tasks:
-            node.set_input_data(data)
-            data = node.process(data)
-            node.set_output_data(data)
+        for task in self.tasks:
+            task.set_input_data(data)
+            data = task.process(data)
+            task.set_output_data(data)
             self.dataLogger.append(data)
         self.set_output_data(data)
         return data
