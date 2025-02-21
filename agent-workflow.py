@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import json
 from core.agent_manager import AgentManager
-from config.enum import PipelineName
+from config.enum import AgentName
 from pipelines.intent_router_pipeline import IntentRouterPipeline
 from pipelines.refund_pipeline import RefundPipeline
 from pipelines.other_pipeline import OtherPipeline
@@ -26,12 +26,12 @@ pipeline_manager = AgentManager.get_instance(agent_mapping=EVENT_TO_AGENT_MAP)
 message_data = load_message()
 
 # Create pipelines
-intent_router_pipeline = IntentRouterPipeline(PipelineName.INTENT_ROUTER)
-refund_pipeline = RefundPipeline(PipelineName.REFUND)
-other_pipeline = OtherPipeline(PipelineName.OTHER)
-refund_complete_pipeline = RefundCompletePipeline(PipelineName.REFUND_COMPLETE)
-human_in_loop_pipeline = HumanInLoopPipeline(PipelineName.HUMAN_IN_LOOP)
-product_pipeline = ProductPipeline(PipelineName.PRODUCT_ISSUE)
+intent_router_pipeline = IntentRouterPipeline(AgentName.INTENT_ROUTER)
+refund_pipeline = RefundPipeline(AgentName.REFUND)
+other_pipeline = OtherPipeline(AgentName.OTHER)
+refund_complete_pipeline = RefundCompletePipeline(AgentName.REFUND_COMPLETE)
+human_in_loop_pipeline = HumanInLoopPipeline(AgentName.HUMAN_IN_LOOP)
+product_pipeline = ProductPipeline(AgentName.PRODUCT_ISSUE)
 
 # Register pipelines    
 pipeline_manager.register_agent(intent_router_pipeline)
@@ -42,7 +42,7 @@ pipeline_manager.register_agent(human_in_loop_pipeline)
 pipeline_manager.register_agent(product_pipeline)
 
 # Run the pipeline
-final_result = pipeline_manager.run_agent(PipelineName.INTENT_ROUTER, message_data)
+final_result = pipeline_manager.run_agent(AgentName.INTENT_ROUTER, message_data)
 
 print("\nFinal Result:\n", final_result)
 

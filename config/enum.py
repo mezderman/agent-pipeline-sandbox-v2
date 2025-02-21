@@ -1,13 +1,13 @@
 from enum import Enum
 
-class PipelineName(str, Enum):
-    """Enum for all pipeline types"""
-    INTENT_ROUTER = "intent-router-pipeline"
-    REFUND = "refund-pipeline"
-    HUMAN_IN_LOOP = "human-in-loop-pipeline"
-    REFUND_COMPLETE = "refund-complete-pipeline"
-    OTHER = "other-pipeline"
-    PRODUCT_ISSUE = "product-issue-pipeline"
+class AgentName(str, Enum):
+    """Enum for all agent types"""
+    INTENT_ROUTER = "intent-router-agent"
+    REFUND = "refund-agent"
+    HUMAN_IN_LOOP = "human-in-loop-agent"
+    REFUND_COMPLETE = "refund-complete-agent"
+    OTHER = "other-agent"
+    PRODUCT_ISSUE = "product-issue-agent"
 
 class EventType(str, Enum):
     """Enum for all event types"""
