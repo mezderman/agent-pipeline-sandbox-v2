@@ -23,32 +23,32 @@ def load_message():
 
 load_dotenv()
 # Initialize with the mapping
-pipeline_manager = AgentManager.get_instance(agent_mapping=EVENT_TO_AGENT_MAP)
+agent_manager = AgentManager.get_instance(agent_mapping=EVENT_TO_AGENT_MAP)
 message_data = load_message()
 
-# Create pipelines
-intent_router_pipeline = IntentRouterAgent(AgentName.INTENT_ROUTER)
-refund_pipeline = RefundAgent(AgentName.REFUND)
-other_pipeline = OtherAgent(AgentName.OTHER)
-refund_complete_pipeline = RefundCompleteAgent(AgentName.REFUND_COMPLETE)
-human_in_loop_pipeline = HumanInLoopAgent(AgentName.HUMAN_IN_LOOP)
-product_pipeline = ProductAgent(AgentName.PRODUCT_ISSUE)
+# Create agents
+intent_router_agent = IntentRouterAgent(AgentName.INTENT_ROUTER)
+refund_agent = RefundAgent(AgentName.REFUND)
+other_agent = OtherAgent(AgentName.OTHER)
+refund_complete_agent = RefundCompleteAgent(AgentName.REFUND_COMPLETE)
+human_in_loop_agent = HumanInLoopAgent(AgentName.HUMAN_IN_LOOP)
+product_agent = ProductAgent(AgentName.PRODUCT_ISSUE)
 
-# Register pipelines    
-pipeline_manager.register_agent(intent_router_pipeline)
-pipeline_manager.register_agent(refund_pipeline)
-pipeline_manager.register_agent(other_pipeline)  
-pipeline_manager.register_agent(refund_complete_pipeline)
-pipeline_manager.register_agent(human_in_loop_pipeline)
-pipeline_manager.register_agent(product_pipeline)
+# Register agents    
+agent_manager.register_agent(intent_router_agent)
+agent_manager.register_agent(refund_agent)
+agent_manager.register_agent(other_agent)  
+agent_manager.register_agent(refund_complete_agent)
+agent_manager.register_agent(human_in_loop_agent)
+agent_manager.register_agent(product_agent)
 
-# Run the pipeline
-final_result = pipeline_manager.run_agent(AgentName.INTENT_ROUTER, message_data)
+# Run the agent
+final_result = agent_manager.run_agent(AgentName.INTENT_ROUTER, message_data)
 
 print("\nFinal Result:\n", final_result)
 
 # After running the pipeline
-logs = pipeline_manager.get_agents_data_logger_json()
+logs = agent_manager.get_agents_data_logger_json()
 
-print("\nPipeline Execution Logs:")
+print("\Agent Execution Logs:")
 print(logs)

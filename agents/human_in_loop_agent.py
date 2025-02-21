@@ -5,4 +5,4 @@ class HumanInLoopAgent(Agent):
     def __init__(self, name):
         super().__init__(name)
         
-        self.add_task(HumanInLoopTask("human-in-loop-node"))
+        self.add_task(HumanInLoopTask("human-in-loop-task"))
