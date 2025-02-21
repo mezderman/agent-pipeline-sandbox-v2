@@ -26,11 +26,11 @@ class AgentManager:
         self.pipelines[pipeline.get_name()] = pipeline
         return self.pipelines
 
-    def get_pipeline(self, name):
+    def get_agent(self, name):
         """Get a pipeline by name"""
         return self.pipelines.get(name)
     
-    def run_pipeline(self, name, data, visited_pipelines=None):
+    def run_agent(self, name, data, visited_pipelines=None):
         """Executes a specified pipeline."""
         if visited_pipelines is None:
             visited_pipelines = set()
@@ -43,7 +43,7 @@ class AgentManager:
         
         pipeline = self.pipelines.get(name)
         if pipeline:
-            self.save_pipelines_path(pipeline)
+            self.save_agent_path(pipeline)
             results = pipeline.run(data)
             print(f"Results: {results}")
             
@@ -57,19 +57,19 @@ class AgentManager:
                     
                 if event in self.pipeline_mapping:
                     pipeline_name = self.pipeline_mapping[event]
-                    results = self.run_pipeline(pipeline_name, results, visited_pipelines)
+                    results = self.run_agent(pipeline_name, results, visited_pipelines)
             return results
         else:
             raise ValueError(f"Pipeline {name} not found")
         
-    def save_pipelines_path(self, pipeline):
+    def save_agent_path(self, pipeline):
         self.pipelines_path.append(pipeline)
         return self.pipelines_path
     
-    def get_pipelines_path(self):
+    def get_agents_path(self):
         return self.pipelines_path
     
-    def get_pipelines_data_logger(self):
+    def get_agents_data_logger(self):
         pipeline_logs = []
         
         for pipeline in self.pipelines_path:
@@ -92,8 +92,8 @@ class AgentManager:
         
         return pipeline_logs
     
-    def get_pipelines_data_logger_json(self):
-        logs = self.get_pipelines_data_logger()
+    def get_agents_data_logger_json(self):
+        logs = self.get_agents_data_logger()
         formatted_logs = json.dumps(logs, indent=2, cls=self.CustomJSONEncoder)
         return formatted_logs
     

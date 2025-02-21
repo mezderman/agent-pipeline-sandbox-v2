@@ -42,12 +42,12 @@ pipeline_manager.register_agent(human_in_loop_pipeline)
 pipeline_manager.register_agent(product_pipeline)
 
 # Run the pipeline
-final_result = pipeline_manager.run_pipeline(PipelineName.INTENT_ROUTER, message_data)
+final_result = pipeline_manager.run_agent(PipelineName.INTENT_ROUTER, message_data)
 
 print("\nFinal Result:\n", final_result)
 
 # After running the pipeline
-logs = pipeline_manager.get_pipelines_data_logger_json()
+logs = pipeline_manager.get_agents_data_logger_json()
 
 print("\nPipeline Execution Logs:")
 print(logs)
