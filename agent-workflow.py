@@ -47,7 +47,7 @@ final_result = agent_manager.run_agent(AgentName.INTENT_ROUTER, message_data)
 
 print("\nFinal Result:\n", final_result)
 
-# After running the pipeline
+# After running the agent
 logs = agent_manager.get_agents_data_logger_json()
 
 print("\Agent Execution Logs:")

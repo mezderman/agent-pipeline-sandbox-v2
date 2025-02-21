@@ -87,7 +87,7 @@ class AgentManager:
                     }
                     agent_data["tasks_data"].append(task_data)
             
-            if agent_data["tasks_data"]:  # Only add agents that have nodes with data
+            if agent_data["tasks_data"]:  # Only add agents that have tasks with data
                 agent_logs.append(agent_data)
         
         return agent_logs
