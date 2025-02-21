@@ -15,7 +15,7 @@ class FinalDecision(BaseModel):
         description="Steps you took to resolve the product issue"
     )
 
-class ProductNode(Task):
+class ProductTask(Task):
     def __init__(self, name):
         self.name = name
         self.client = OpenAI()

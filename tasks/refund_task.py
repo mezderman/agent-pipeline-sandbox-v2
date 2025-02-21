@@ -22,7 +22,7 @@ class FinalDecision(BaseModel):
         description="Steps you took to resolve the refund request"
     )
 
-class RefundNode(Task):
+class RefundTask(Task):
     def __init__(self, name):
         self.name = name
         self.client = OpenAI()

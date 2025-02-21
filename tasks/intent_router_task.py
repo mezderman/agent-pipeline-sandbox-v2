@@ -45,7 +45,7 @@ class EventAnalysis(BaseModel):
         description="Explanation of why the event was classified this way"
     )
 
-class IntentRouterNode(Task):
+class IntentRouterTask(Task):
     def __init__(self, name):
         super().__init__(name)
         self.client = OpenAI()

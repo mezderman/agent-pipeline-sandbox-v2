@@ -1,9 +1,9 @@
 from core.agent import Agent
-from tasks.refund_complete_node import RefundCompleteNode
+from tasks.refund_complete_task import RefundCompleteTask
 
 
 class RefundCompleteAgent(Agent):
     def __init__(self, name):
         super().__init__(name)
         
-        self.add_task(RefundCompleteNode("refund-complete-node"))
+        self.add_task(RefundCompleteTask("refund-complete-task"))

@@ -1,7 +1,7 @@
 from core.task import Task
 from openai import OpenAI
 
-class HumanInLoopNode(Task):
+class HumanInLoopTask(Task):
     def __init__(self, name):
         self.name = name
         self.client = OpenAI()
