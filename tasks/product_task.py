@@ -4,6 +4,13 @@ from tools.product_manual_rag import get_product_manual
 from pydantic import BaseModel, Field
 from typing import List
 from core.utils import function_to_json
+import json
+from openai.types.chat.chat_completion_message_tool_call import (
+    ChatCompletionMessageToolCall,
+    Function,
+)
+
+
 
 class FinalDecision(BaseModel):
     response: str = Field(
@@ -15,11 +22,13 @@ class FinalDecision(BaseModel):
         description="Steps you took to resolve the product issue"
     )
 
+
+
 class ProductTask(Task):
-    def __init__(self, name):
+    def __init__(self, name, functions=[get_product_manual]):
         self.name = name
         self.client = OpenAI()
-        
+        self.functions = functions
         # Register tools
         self.register_tools({
             "get_product_manual": get_product_manual
@@ -33,15 +42,28 @@ class ProductTask(Task):
         # Convert Pydantic model to dict if necessary
         input_data = data.model_dump() if hasattr(data, 'model_dump') else data
         
-        messages = []
+        new_messages = []
         completion = self.plan_resolution(self.client)
+        tool_calls = completion.choices[0].message.tool_calls
         
-        if completion.choices[0].message.tool_calls:    
-            messages = self.execute_tools(completion.choices[0].message)
-        else:
-            print("No tool calls")
+        partial_response = self.handle_tool_calls(tool_calls, self.functions, completion.choices[0].message)
 
-        final_decision_completion = self.final_decision(self.client, messages)
+       
+        
+        new_messages.append(completion.choices[0].message)
+        new_messages.extend(partial_response.messages)
+
+        
+        # if completion.choices[0].message.tool_calls:    
+        #     messages = self.execute_tools(completion.choices[0].message)
+            
+        #     print("messages #########################################################")
+        #     print(messages)
+           
+        # else:
+        #     print("No tool calls")
+
+        final_decision_completion = self.final_decision(self.client, new_messages)
         final_decision = final_decision_completion.choices[0].message.parsed
        
        
@@ -93,3 +115,7 @@ class ProductTask(Task):
             response_format=FinalDecision
         )
         return completion
+    
+    
+    
+    

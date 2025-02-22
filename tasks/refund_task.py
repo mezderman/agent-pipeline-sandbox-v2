@@ -7,6 +7,9 @@ from typing import Literal, List
 from pydantic import BaseModel, Field
 from core.utils import function_to_json
 
+__CTX_VARS_NAME__ = "context_variables"
+
+
 class FinalDecision(BaseModel):
     decision: Literal["refund_eligible", "refund_not_eligible"] = Field(
         ...,
@@ -22,9 +25,10 @@ class FinalDecision(BaseModel):
     )
 
 class RefundTask(Task):
-    def __init__(self, name):
+    def __init__(self, name, functions=[get_refund_policy, get_transaction_details]):
         self.name = name
         self.client = OpenAI()
+        self.functions = functions
         
         # Register tools using parent method
         self.register_tools({
@@ -39,13 +43,17 @@ class RefundTask(Task):
         print("Processing refund request...")
         super().process(data)
         messages = []
+        new_messages = []
         completion = self.plan_resolution(self.client)
-        if completion.choices[0].message.tool_calls:    
-            messages = self.execute_tools(completion.choices[0].message)
-        else:
-            print("No tool calls")
 
-        final_decision_completion = self.final_decision(self.client, messages)
+        tool_calls = completion.choices[0].message.tool_calls
+        partial_response = self.handle_tool_calls(tool_calls, self.functions, completion.choices[0].message)
+
+        new_messages.append(completion.choices[0].message)
+        new_messages.extend(partial_response.messages)
+        print(new_messages)
+
+        final_decision_completion = self.final_decision(self.client, new_messages)
         final_decision = final_decision_completion.choices[0].message.parsed
        
        
@@ -99,4 +107,6 @@ class RefundTask(Task):
             response_format=FinalDecision
         )
         return completion
+    
+    
             
