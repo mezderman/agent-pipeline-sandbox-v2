@@ -1,5 +1,4 @@
 import json
-from core.tool_registry import ToolRegistry
 from core.types import Response
 
 __CTX_VARS_NAME__ = "context_variables"
@@ -30,36 +29,6 @@ class Task:
         print(f"Processing task: {self.name}")
         return data
     
-    def execute_tools(self, message):
-        messages = []
-        messages.append(message)
-        tool_registry = ToolRegistry.get_instance()
-        
-        for tool_call in message.tool_calls:
-            name = tool_call.function.name
-            args = json.loads(tool_call.function.arguments)
-            
-            tool_function = tool_registry.get_tool(name)
-            if tool_function:
-                result = tool_function(**args)
-                print(f"🔧 Executing tool: {name}")
-            else:
-                print(f"❌ Tool {name} not found!")
-                continue
-           
-            print(f"   Result received: {result is not None}")
-
-            messages.append({
-                "role": "tool",
-                "tool_call_id": tool_call.id,
-                "content": json.dumps(result)
-            })
-        return messages
-
-    def register_tools(self, tools: dict):
-        registry = ToolRegistry.get_instance()
-        for name, func in tools.items():
-            registry.register_tool(name, func)
 
     def handle_tool_calls(
         self,

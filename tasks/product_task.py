@@ -4,11 +4,7 @@ from tools.product_manual_rag import get_product_manual
 from pydantic import BaseModel, Field
 from typing import List
 from core.utils import function_to_json
-import json
-from openai.types.chat.chat_completion_message_tool_call import (
-    ChatCompletionMessageToolCall,
-    Function,
-)
+
 
 
 
@@ -30,9 +26,7 @@ class ProductTask(Task):
         self.client = OpenAI()
         self.functions = functions
         # Register tools
-        self.register_tools({
-            "get_product_manual": get_product_manual
-        })
+        
         self.tools = [function_to_json(f) for f in [get_product_manual]]
 
     def process(self, data):
@@ -42,28 +36,17 @@ class ProductTask(Task):
         # Convert Pydantic model to dict if necessary
         input_data = data.model_dump() if hasattr(data, 'model_dump') else data
         
-        new_messages = []
+        messages = []
         completion = self.plan_resolution(self.client)
         tool_calls = completion.choices[0].message.tool_calls
         
         partial_response = self.handle_tool_calls(tool_calls, self.functions, completion.choices[0].message)
 
-       
-        
-        new_messages.append(completion.choices[0].message)
-        new_messages.extend(partial_response.messages)
+        messages.append(completion.choices[0].message)
+        messages.extend(partial_response.messages)
 
-        
-        # if completion.choices[0].message.tool_calls:    
-        #     messages = self.execute_tools(completion.choices[0].message)
-            
-        #     print("messages #########################################################")
-        #     print(messages)
-           
-        # else:
-        #     print("No tool calls")
 
-        final_decision_completion = self.final_decision(self.client, new_messages)
+        final_decision_completion = self.final_decision(self.client, messages)
         final_decision = final_decision_completion.choices[0].message.parsed
        
        
