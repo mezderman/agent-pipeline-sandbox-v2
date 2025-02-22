@@ -25,7 +25,7 @@ class FinalDecision(BaseModel):
     )
 
 class RefundTask(Task):
-    def __init__(self, name, functions=[get_refund_policy, get_transaction_details]):
+    def __init__(self, name, functions):
         self.name = name
         self.client = OpenAI()
         self.functions = functions

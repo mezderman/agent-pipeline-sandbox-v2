@@ -7,8 +7,10 @@ class Task:
     def __init__(self, name, functions=[]):
 
         self.name = name
+        self.functions = functions
         self.inputData = []
         self.outputData = []
+        
 
     def get_name(self):
         return self.name

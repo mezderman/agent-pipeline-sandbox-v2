@@ -21,11 +21,10 @@ class FinalDecision(BaseModel):
 
 
 class ProductTask(Task):
-    def __init__(self, name, functions=[get_product_manual]):
+    def __init__(self, name, functions):
         self.name = name
         self.client = OpenAI()
         self.functions = functions
-        # Register tools
         
         self.tools = [function_to_json(f) for f in [get_product_manual]]
 
