@@ -37,10 +37,11 @@ product_agent = ProductAgent(AgentName.PRODUCT_ISSUE)
 # Register agents    
 agent_manager.register_agent(intent_router_agent)
 agent_manager.register_agent(refund_agent)
+agent_manager.register_agent(product_agent)
 agent_manager.register_agent(other_agent)  
 agent_manager.register_agent(refund_complete_agent)
 agent_manager.register_agent(human_in_loop_agent)
-agent_manager.register_agent(product_agent)
+
 
 # Run the agent
 final_result = agent_manager.run_agent(AgentName.INTENT_ROUTER, message_data)
